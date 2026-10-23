@@ -21,11 +21,13 @@ Use the saved Potala assistant, German-first greeting, German-capable transcript
 
 The exact current Vapi prompt and assistant configuration are **not** part of the exported files here. `docs/vapi-prompt-reference.md` records the intended behavior but should be replaced with an export/copy of the published assistant before this repository is considered a full backup.
 
-## 4. Private browser page
+## 4. Public browser page
 
-The deployed page is <https://potala-voice-demo-2026.ochrescout3.chatgpt.site>. Open it as the owner. Enter the **public** Vapi key and the Potala assistant ID in its setup panel; these values are stored in that browser. Do not enter a private key.
+The deployed page is <https://potala-voice-demo-2026.ochrescout3.chatgpt.site>. Visitors can open the link, but each browser must enter the **public** Vapi key and Potala assistant ID in its setup panel. These values are stored locally in that browser. Do not enter a private key.
 
-In Vapi, restrict the public key to the page origin `https://potala-voice-demo-2026.ochrescout3.chatgpt.site` and to the Potala assistant. The page can be built from `web/` with `npm install && npm run build`. Start Conversation opens a Vapi web call and uses call credit; saving setup does not.
+In Vapi, restrict the public key to the page origin `https://potala-voice-demo-2026.ochrescout3.chatgpt.site` and to the Potala assistant. The page can be built from `web/` with `npm install && npm run build`. Start Conversation opens a Vapi web call and uses call credit; saving setup does not. The page itself has no call quota or guest authentication, so share the key only with intended testers.
+
+If you move to another Vapi account, recreate/publish the assistant and its two tools there, point the tools at the corresponding Make scenarios, create a new restricted public key, and replace the public key and assistant ID in each browser's setup panel. The Make scenarios and demo calendar can remain if their webhook and connection settings are unchanged.
 
 ## 5. Before real restaurant use
 

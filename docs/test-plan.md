@@ -16,7 +16,7 @@ These are conversation-session observations, not automated regression tests.
 
 ## Remaining low-credit final test
 
-1. Enter the public Vapi key and assistant ID on the private page. Saving them must **not** start a call.
+1. Enter the public Vapi key and assistant ID on the public page. Saving them must **not** start a call.
 2. Choose a fresh future open slot with no existing demo event. Start one web conversation. Confirm date, time, guests, and a fictional name before booking.
 3. Verify the tool says success and exactly one 90-minute event appears in the demo calendar with the matching details.
 4. Record any unusually long pauses and inspect that call in Vapi Logs → Calls to distinguish speech detection, model, and tool delay.

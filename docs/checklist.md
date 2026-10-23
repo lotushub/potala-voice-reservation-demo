@@ -1,6 +1,6 @@
 # Potala reservation assistant — to-do list
 
-Updated 22 October 2026. Presentation: Monday, 2 November 2026.
+Updated 23 October 2026. Presentation: Monday, 2 November 2026.
 
 ## Completed
 
@@ -18,6 +18,8 @@ Updated 22 October 2026. Presentation: Monday, 2 November 2026.
 - [x] Add the short reservation-time question to the Vapi reservation flow (confirm it was saved/published in the assistant).
 - [x] Build and privately publish the Start Conversation page. It awaits the owner's public Vapi key and assistant ID before it can start a call.
 - [x] Prepare project workflow, setup, tests, presentation notes, page source, and sanitized Make blueprint references in a downloadable package.
+- [x] Create a private GitHub repository and upload the project package.
+- [x] Update the restaurant-style demo page and publish it as a public link. Visitors still need a restricted Vapi public key and assistant ID.
 - [x] Open the private page in a standalone browser tab, verify sound from the built-in microphone with the free local check, and complete a short Vapi web call: “4 Personen” was transcribed and the assistant asked for a date.
 
 ## Next session — 22 October
@@ -30,7 +32,7 @@ Updated 22 October 2026. Presentation: Monday, 2 November 2026.
 - [ ] Complete a booking through the page to a fresh future open slot and confirm the matching demo calendar event. Short audio exchange worked on 22 October; booking was not tested in that call.
 - [ ] Verify the published date clarification wording during the final low-credit call. Listen to the greeting recording before changing pronunciation based on the transcript alone.
 - [ ] Prepare a short presentation script and workflow view for 2 November, using a future open date because Monday is normally closed.
-- [ ] Create a new private GitHub repository and upload the prepared project package. Replace the reconstructed prompt reference with the exact published Vapi prompt.
+- [ ] Replace the reconstructed prompt reference with the exact published Vapi prompt.
 
 ## Before real restaurant use
 

@@ -10,6 +10,10 @@
 6. After confirmation, Vapi calls the booking tool with `date`, `time`, `guests`, and `name`. Make rechecks the conditions, creates a 90-minute event when permitted, and replies `{"success":true}` or `{"success":false,"reason":"slot_unavailable"}`.
 7. Vapi reports only the tool result it actually received. Successful demo entries are practice reservations, not real restaurant confirmations.
 
+## Guest details currently saved
+
+The booking scenario maps the demo name and guest count into the Google Calendar event title: `DEMO reservation -<name>-<guests> guests`. Its start and end fields contain the requested time and a 90-minute duration. The current booking tool does not pass or write a phone number to the event. A spoken number may appear in Vapi call transcripts or recordings depending on that account's artifact settings, but it is not a structured booking field. Use fictional details in this demo.
+
 ## Current Make rules
 
 | Day | Accepted reservation start times |
