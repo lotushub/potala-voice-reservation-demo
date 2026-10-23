@@ -7,12 +7,12 @@
 3. Vapi calls the availability tool with `date` (`YYYY-MM-DD`), `time` (`HH:mm`), and integer `guests`.
 4. The Make availability scenario checks the requested start time in `Europe/Zurich`, weekday rules, and existing events in the demo Google Calendar. It replies `{"available":true}` or `{"available":false,"reason":"slot_unavailable"}`.
 5. If a slot is available, Vapi collects a demo name and any optional fictional contact detail, repeats the reservation details, and asks for explicit confirmation.
-6. After confirmation, Vapi calls the booking tool with `date`, `time`, `guests`, `name`, and optional `phone` after the live mapping is applied. Make rechecks the conditions, creates a 90-minute event when permitted, and replies `{"success":true}` or `{"success":false,"reason":"slot_unavailable"}`.
+6. After confirmation, Vapi calls the booking tool with `date`, `time`, `guests`, `name`, and optional `phone`. Make rechecks the conditions, creates a 90-minute event when permitted, and replies `{"success":true}` or `{"success":false,"reason":"slot_unavailable"}`.
 7. Vapi reports only the tool result it actually received. Successful demo entries are practice reservations, not real restaurant confirmations.
 
 ## Guest details currently saved
 
-The booking scenario maps the demo name and guest count into the Google Calendar event title: `DEMO reservation -<name>-<guests> guests`. Its start and end fields contain the requested time and a 90-minute duration. The revised reference blueprint maps the optional `phone` text field into the event **Description** as `Demo contact number: ...`; it writes `Not provided` when skipped. The live Make and Vapi booking tools still need this mapping applied before phone numbers will be saved. A spoken number may appear in Vapi call transcripts or recordings depending on that account's artifact settings. Use fictional details in this demo.
+The booking scenario maps the demo name and guest count into the Google Calendar event title: `DEMO reservation -<name>-<guests> guests`. Its start and end fields contain the requested time and a 90-minute duration. The live Make scenario maps the optional `phone` into the event **Description** as `Demo contact number: ...`; a direct webhook test saved a fictional number. The revised reference blueprint uses `ifempty` to write `Not provided` when skipped, while the live description currently leaves the value empty when skipped. The Vapi booking tool exposes optional `phone`, but an end-to-end voice test has not yet verified that the assistant passes it. A spoken number may appear in Vapi call transcripts or recordings depending on that account's artifact settings. Use fictional details in this demo.
 
 ## Current Make rules
 

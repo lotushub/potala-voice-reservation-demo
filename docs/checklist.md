@@ -33,7 +33,8 @@ Updated 23 October 2026. Presentation: Monday, 2 November 2026.
 - [ ] Verify the published date clarification wording during the final low-credit call. Listen to the greeting recording before changing pronunciation based on the transcript alone.
 - [ ] Prepare a short presentation script and workflow view for 2 November, using a future open date because Monday is normally closed.
 - [ ] Replace the reconstructed prompt reference with the exact published Vapi prompt.
-- [ ] Apply the optional phone mapping in the live Vapi booking tool and Make booking scenario; verify a fictional number in the demo calendar event description. The repository blueprint is prepared, but the live configuration is not yet changed.
+- [x] Add optional `phone` string to Vapi booking tool and map `phone` to the live Make Calendar description; verify with a direct webhook test using a fictional number.
+- [ ] Publish the revised Vapi assistant prompt and verify a fictional number in one end-to-end voice booking.
 
 ## Before real restaurant use
 

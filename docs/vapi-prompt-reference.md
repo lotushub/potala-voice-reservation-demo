@@ -1,5 +1,7 @@
 # Vapi prompt reference
 
+The revised, paste-ready prompt is in [vapi-system-prompt.md](vapi-system-prompt.md). It fixes the conflicting phone rules, checks availability before collecting contact details, confirms all details before booking, and keeps the spoken greeting natural while stating the demo-calendar limit after a successful booking.
+
 This is a **reconstruction of the intended behavior**, not a verified copy of the current published prompt. Replace this file with the actual Vapi prompt after exporting/copying it from the assistant.
 
 ## Identity and greeting
