@@ -29,12 +29,13 @@ Updated 23 October 2026. Presentation: Monday, 2 November 2026.
 - [ ] Test one closed-day or out-of-hours request by voice; verify that no calendar event is created.
 - [ ] If pauses persist, inspect a specific call’s transcript and per-turn latency in Vapi Logs → Calls. Distinguish waiting for speech, model delay, and tool delay before changing providers.
 - [ ] Verify the Vapi **public** key is restricted to the Potala page origin and assistant. Browser setup, microphone permission, and a short call were tested.
-- [ ] Complete a booking through the page to a fresh future open slot and confirm the matching demo calendar event. Short audio exchange worked on 22 October; booking was not tested in that call.
+- [x] Complete a booking through the page to a future open slot and confirm the matching demo calendar event.
 - [ ] Verify the published date clarification wording during the final low-credit call. Listen to the greeting recording before changing pronunciation based on the transcript alone.
 - [ ] Prepare a short presentation script and workflow view for 2 November, using a future open date because Monday is normally closed.
 - [ ] Replace the reconstructed prompt reference with the exact published Vapi prompt.
 - [x] Add optional `phone` string to Vapi booking tool and map `phone` to the live Make Calendar description; verify with a direct webhook test using a fictional number.
-- [ ] Publish the revised Vapi assistant prompt and verify a fictional number in one end-to-end voice booking.
+- [x] Publish the revised Vapi assistant prompt and booking tool v3; verify a fictional number in one end-to-end voice booking.
+- [ ] Add a separate lookup and change/cancel flow for existing reservations, with a booking reference and identity check before updating an event.
 
 ## Before real restaurant use
 
