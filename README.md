@@ -27,6 +27,7 @@ Vapi handles speech, dialogue, and tool calls. Make applies the reservation rule
 - [`docs/presentation.md`](docs/presentation.md): a short presentation script.
 - [`docs/vapi-prompt-reference.md`](docs/vapi-prompt-reference.md): a prompt reference reconstructed from the working design. Copy the actual published prompt from Vapi before treating this as an exact backup.
 - [`docs/vapi-system-prompt.md`](docs/vapi-system-prompt.md): revised paste-ready system prompt based on the prompt supplied by the owner on 23 October 2026.
+- [`docs/change-booking-plan.md`](docs/change-booking-plan.md): requirements and a low-credit plan for changing existing reservations later.
 - [`make/`](make/): sanitized reference exports of the two scenarios. Reconnect webhooks, Google connections, and calendar after importing.
 - [`web/`](web/): source for the public Start Conversation page.
 
