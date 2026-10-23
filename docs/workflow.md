@@ -7,7 +7,7 @@
 3. Vapi calls the availability tool with `date` (`YYYY-MM-DD`), `time` (`HH:mm`), and integer `guests`.
 4. The Make availability scenario checks the requested start time in `Europe/Zurich`, weekday rules, and existing events in the demo Google Calendar. It replies `{"available":true}` or `{"available":false,"reason":"slot_unavailable"}`.
 5. If a slot is available, Vapi collects a demo name and any optional fictional contact detail, repeats the reservation details, and asks for explicit confirmation.
-6. After confirmation, Vapi calls the booking tool with `date`, `time`, `guests`, and `name`. Make rechecks the conditions, creates a 90-minute event when permitted, and replies `{"success":true}` or `{"success":false,"reason":"slot_unavailable"}`.
+6. After confirmation, Vapi calls the booking tool with `date`, `time`, `guests`, `name`, and optional `phone` after the live mapping is applied. Make rechecks the conditions, creates a 90-minute event when permitted, and replies `{"success":true}` or `{"success":false,"reason":"slot_unavailable"}`.
 7. Vapi reports only the tool result it actually received. Successful demo entries are practice reservations, not real restaurant confirmations.
 
 ## Guest details currently saved
