@@ -246,6 +246,7 @@
                 "start": "{{parseDate(1.date + 1.time; \"YYYY-MM-DD HH:mm\"; \"Europe/Zurich\")}}",
                 "select": "detail",
                 "summary": "DEMO reservation -{{1.name}}-{{1.guests}} guests",
+                "description": "Demo contact number: {{ifempty(1.phone; \"Not provided\")}}",
                 "calendar": "",
                 "visibility": "default",
                 "allDayEvent": false,

@@ -12,7 +12,7 @@
 
 ## Guest details currently saved
 
-The booking scenario maps the demo name and guest count into the Google Calendar event title: `DEMO reservation -<name>-<guests> guests`. Its start and end fields contain the requested time and a 90-minute duration. The current booking tool does not pass or write a phone number to the event. A spoken number may appear in Vapi call transcripts or recordings depending on that account's artifact settings, but it is not a structured booking field. Use fictional details in this demo.
+The booking scenario maps the demo name and guest count into the Google Calendar event title: `DEMO reservation -<name>-<guests> guests`. Its start and end fields contain the requested time and a 90-minute duration. The revised reference blueprint maps the optional `phone` text field into the event **Description** as `Demo contact number: ...`; it writes `Not provided` when skipped. The live Make and Vapi booking tools still need this mapping applied before phone numbers will be saved. A spoken number may appear in Vapi call transcripts or recordings depending on that account's artifact settings. Use fictional details in this demo.
 
 ## Current Make rules
 

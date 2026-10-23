@@ -15,6 +15,10 @@ The sanitization removed webhook IDs, Google connection IDs, calendar IDs, and r
 
 Each scenario should be saved and active. Their Webhook response modules must return JSON, not the default `Accepted` page. Store webhook URLs only in the respective Vapi tool configuration or a private secret store.
 
+### Save a demo phone number
+
+In the **booking** scenario only, the Google Calendar **Create an Event** module's **Description** should read `Demo contact number: {{ifempty(1.phone; "Not provided")}}`. Map `phone` from the first Webhooks module as a **text** value. The availability scenario needs no phone. Update the booking tool in Vapi to pass the optional `phone` string alongside its existing `date`, `time`, `guests`, and `name` inputs. Run a fictional-number test and inspect the calendar description before treating this change as live.
+
 ## 3. Vapi
 
 Use the saved Potala assistant, German-first greeting, German-capable transcription, and the two tools already attached to it. The tools should call the matching Make webhook: availability to availability, booking to booking. Confirm the tool parameter names and response bodies against `docs/workflow.md`.

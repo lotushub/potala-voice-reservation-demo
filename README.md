@@ -4,6 +4,8 @@ A German-first voice reservation demonstration for Potala Restaurant in Olten. T
 
 **Status (23 October 2026):** the Vapi assistant and both Make scenarios have been tested; the public demo page is published. A visitor needs a restricted Vapi public key and assistant ID from the host to start a call. This is a demo, not the live restaurant booking service.
 
+The optional phone-number mapping is prepared in the reference blueprint and setup notes, but must still be applied to the live Vapi booking tool and Make booking scenario. Until then, the demo calendar event does not store a phone number.
+
 ## Architecture
 
 ```mermaid

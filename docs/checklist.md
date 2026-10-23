@@ -33,6 +33,7 @@ Updated 23 October 2026. Presentation: Monday, 2 November 2026.
 - [ ] Verify the published date clarification wording during the final low-credit call. Listen to the greeting recording before changing pronunciation based on the transcript alone.
 - [ ] Prepare a short presentation script and workflow view for 2 November, using a future open date because Monday is normally closed.
 - [ ] Replace the reconstructed prompt reference with the exact published Vapi prompt.
+- [ ] Apply the optional phone mapping in the live Vapi booking tool and Make booking scenario; verify a fictional number in the demo calendar event description. The repository blueprint is prepared, but the live configuration is not yet changed.
 
 ## Before real restaurant use
 
