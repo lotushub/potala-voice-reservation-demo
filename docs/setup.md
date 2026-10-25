@@ -4,7 +4,7 @@
 
 - `Potala Demo – Calendar – Check Indoor Availability` handles availability.
 - `Potala Demo – Book or Change Indoor Reservation` handles both `action=book` and `action=change`. The scenario branches by action, enforces Zurich-time rules and 15-table capacity, and uses the dedicated demo calendar.
-- Preserve the current Make webhook URLs privately. The `make/` exports in this repo are **older reference copies**, not the combined live scenario; importing them does not recreate the current system.
+- Preserve the current Make webhook URLs privately. The sanitized combined reference is `make/combined-book-change.reference.blueprint.json`; older availability and booking references are also present. Reconnect the webhook, Google account, and calendar after import and verify the filters; these files do not carry live credentials or connections.
 - The book response should expose `success` and `bookingRef`; the event title/description contains name, guest count, optional phone, and reference. The change response should expose `success` or a reason. Do not confuse a webhook's `Accepted` page with a completed JSON result.
 
 ## 2. Vapi assistant and tools
