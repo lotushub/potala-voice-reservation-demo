@@ -1,34 +1,30 @@
 # Reservation workflow and rules
 
-## End-to-end flow
+## New booking
 
-1. A guest starts a web call (or, later, dials an inbound phone number).
-2. Vapi greets naturally in Standard German and collects party size, date, and time. It asks one question at a time. The short time question is “Um wie viel Uhr möchten Sie reservieren?” The assistant explains the demo-calendar limit when confirming a saved booking or when asked.
-3. Vapi calls the availability tool with `date` (`YYYY-MM-DD`), `time` (`HH:mm`), and integer `guests`.
-4. The Make availability scenario checks the requested start time in `Europe/Zurich`, weekday rules, and existing events in the demo Google Calendar. It replies `{"available":true}` or `{"available":false,"reason":"slot_unavailable"}`.
-5. If a slot is available, Vapi collects a demo name and any optional fictional contact detail, repeats the reservation details, and asks for explicit confirmation.
-6. After confirmation, Vapi calls the booking tool with `date`, `time`, `guests`, `name`, and optional `phone`. Make rechecks the conditions, creates a 90-minute event when permitted, and replies `{"success":true}` or `{"success":false,"reason":"slot_unavailable"}`.
-7. Vapi reports only the tool result it actually received. Successful demo entries are practice reservations, not real restaurant confirmations.
+1. Caller starts a web conversation. The assistant greets in German and can switch to English.
+2. Collect 1–4 guests, exact date, and permitted future start time. Vapi calls `check_potala_demo_availability(date, time, guests)`.
+3. Make checks hours and overlaps in the dedicated demo Google Calendar. It returns `{"available":true}` or `{"available":false,"reason":"slot_unavailable"}`.
+4. If free, collect a name and optional phone. Repeat all details and obtain a clear yes.
+5. Vapi calls `book_potala_demo_indoor_table(date, time, guests, name, phone?)`. The combined Make scenario rechecks the slot and creates a 90-minute event, recording the name, guests, optional phone, and short reference. Success response includes `bookingRef`.
+6. Only after `success:true`, the assistant says the practice booking is saved and spells the reference. No SMS/email is sent.
 
-## Guest details currently saved
+## Change existing booking
 
-The booking scenario maps the demo name and guest count into the Google Calendar event title: `DEMO reservation -<name>-<guests> guests`. Its start and end fields contain the requested time and a 90-minute duration. The live Make scenario maps optional `phone` into the event **Description** as `Demo contact number: ...`; a web voice call using published Vapi booking tool v3 saved a fictional number end to end. The revised reference blueprint uses `ifempty` to write `Not provided` when skipped, while the live description currently leaves the value empty when skipped. A spoken number may appear in Vapi call transcripts or recordings depending on that account's artifact settings. Use fictional details in this demo.
+1. Caller explicitly asks to change, then supplies the **booking reference** and **same saved phone number**. Without either, this demo cannot automatically change it. A booking created without a phone cannot be changed by this voice flow.
+2. Collect new exact date, time, and guest count. Repeat the request and obtain a clear yes.
+3. Vapi calls `change_potala_demo_indoor_reservation(bookingRef, phone, newDate, newTime, newGuests)`. Do not call the separate availability tool: Make searches the proposed slot while excluding this original event.
+4. Make verifies matching reference and phone, checks hours/capacity, and updates the existing Google Calendar event. The response is `{"success":true}` or a reason such as `slot_unavailable` or `reservation_not_found_or_unverified`. The assistant claims success only after true. Cancellation is not implemented.
 
-## Current Make rules
+A reference plus a spoken number is a matching check, **not proof of phone ownership**. Add stronger verification before serving actual customers.
 
-| Day | Accepted reservation start times |
+## Accepted starts (Europe/Zurich)
+
+| Day | Start times |
 | --- | --- |
 | Monday | Closed |
-| Tuesday–Friday | 11:30, 12:00, 12:30; every 30 minutes from 17:00 through 20:30 |
-| Saturday | Every 30 minutes from 17:00 through 20:30 |
-| Sunday | Every 30 minutes from 17:00 through 19:30 |
+| Tuesday–Friday | 11:30, 12:00, 12:30; 17:00–20:30 each 30 minutes |
+| Saturday | 17:00–20:30 each 30 minutes |
+| Sunday | 17:00–19:30 each 30 minutes |
 
-- Timezone: `Europe/Zurich`; start time must be in the future.
-- Indoor capacity: 15 tables, each for 1–4 guests. The demo counts a booking as one table.
-- Event duration: 90 minutes.
-- Both Google Calendar searches currently use a limit of 100 events.
-- Outdoors, large parties, cancellations, holidays, and staff escalation are not implemented.
-
-## Operational limitation
-
-Two simultaneous callers may both see the last table as free before either writes its event. The current Make workflow does not provide an atomic capacity lock. Resolve this before using the system for real reservations. The demo calendar and demo disclosure should stay in place until the restaurant approves a production setup.
+A start must be in the future. Each event lasts 90 minutes. The current model treats 15 indoor tables as capacity and each booking as one table for 1–4 guests. Outdoors and larger parties are not automated. Availability checks can race under concurrent requests; do not use this setup for real bookings without an atomic capacity control. Demo entries and call artifacts can contain personal details; use fictional data until retention and access rules are approved.
