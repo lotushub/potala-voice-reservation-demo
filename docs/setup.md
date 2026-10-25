@@ -1,38 +1,41 @@
 # Setup and restoration
 
-## 1. Google Calendar
+## 1. Keep the two Make scenarios and demo calendar
 
-Create or select a dedicated **demo** calendar. Set its timezone to `Europe/Zurich`. Use that same calendar in both Make scenarios. Do not mix demo entries with real restaurant reservations.
+- `Potala Demo – Calendar – Check Indoor Availability` handles availability.
+- `Potala Demo – Book or Change Indoor Reservation` handles both `action=book` and `action=change`. The scenario branches by action, enforces Zurich-time rules and 15-table capacity, and uses the dedicated demo calendar.
+- Preserve the current Make webhook URLs privately. The `make/` exports in this repo are **older reference copies**, not the combined live scenario; importing them does not recreate the current system.
+- The book response should expose `success` and `bookingRef`; the event title/description contains name, guest count, optional phone, and reference. The change response should expose `success` or a reason. Do not confuse a webhook's `Accepted` page with a completed JSON result.
 
-## 2. Make
+## 2. Vapi assistant and tools
 
-Import the two sanitized blueprints in `make/`, or use them as references to inspect the existing scenarios:
+First message (separate from System Prompt):
 
-- `availability.reference.blueprint.json`
-- `booking.reference.blueprint.json`
+> Guten Tag, Potala Restaurant in Olten. Möchten Sie einen Tisch reservieren oder eine bestehende Testreservierung ändern?
 
-The sanitization removed webhook IDs, Google connection IDs, calendar IDs, and related metadata. Recreate/select the custom webhook in module 1, reconnect Google Calendar, and select the demo calendar in every Search Events and Create Event module. Verify filters and field mappings after import. The exports are reference copies and may need manual repair before Make will run them.
+Use the text in [vapi-system-prompt.md](vapi-system-prompt.md) as a reference and compare against the currently published assistant. Deepgram Nova 3 **Multilingual** is configured for German and English. The most recent recorded assistant used GPT-4.1 and Elliot v2. Attach these three API Request tools:
 
-Each scenario should be saved and active. Their Webhook response modules must return JSON, not the default `Accepted` page. Store webhook URLs only in the respective Vapi tool configuration or a private secret store.
+| Tool | Endpoint and fields | Result |
+| --- | --- | --- |
+| `check_potala_demo_availability` | Availability Make webhook; `date`, `time`, `guests` strings | `available` boolean |
+| `book_potala_demo_indoor_table` | Combined Make webhook with `action=book`; `date`, `time`, `guests`, `name` required strings; `phone` optional string | `success`, `bookingRef` on success |
+| `change_potala_demo_indoor_reservation` | Same combined webhook with `action=change`; `bookingRef`, `phone`, `newDate`, `newTime`, `newGuests` required strings | `success` or reason |
 
-### Save a demo phone number
+Keep complete webhook addresses and account tokens out of GitHub. A change should use the **change tool only** after explicit confirmation.
 
-In the **booking** scenario only, the Google Calendar **Create an Event** module's **Description** should read `Demo contact number: {{ifempty(1.phone; "Not provided")}}`. Map `phone` from the first Webhooks module as a **text** value. The availability scenario needs no phone. Update the booking tool in Vapi to pass the optional `phone` string alongside its existing `date`, `time`, `guests`, and `name` inputs. Run a fictional-number test and inspect the calendar description before treating this change as live.
+## 3. Move to a Vapi account with separate credits
 
-## 3. Vapi
+1. In the new login, check which **organization** is selected and its balance. A second login to the same organization does not move the assistant to a separately funded organization or create a new credit pool.
+2. If using a different organization, create/publish a Potala assistant there with the same first message, prompt, transcriber, model, and voice available to that account. Recreate the **three tools** above with the existing Make endpoints and exact fields; attach all three. Keep the old account for comparison. Do not assume the old assistant or tool IDs transfer.
+3. Create a **public** Vapi key in the new organization, restricted to the deployed page origin and new assistant. In each browser's setup panel replace both the old public key and assistant ID. Never enter or commit a private key.
+4. Save/publish, then use direct tool tests or Make history first; reserve one short Vapi voice call for a final end-to-end check. A successful Make test alone does not prove the new assistant routed the call correctly.
 
-Use the saved Potala assistant, German-first greeting, German-capable transcription, and the two tools already attached to it. The tools should call the matching Make webhook: availability to availability, booking to booking. Confirm the tool parameter names and response bodies against `docs/workflow.md`.
+Changing the Vapi organization does not require changing the existing Make scenario or demo Google Calendar when their connections and webhooks are retained.
 
-The exact current Vapi prompt and assistant configuration are **not** part of the exported files here. `docs/vapi-prompt-reference.md` records the intended behavior but should be replaced with an export/copy of the published assistant before this repository is considered a full backup.
+## 4. Public page
 
-## 4. Public browser page
+<https://potala-voice-demo-2026.ochrescout3.chatgpt.site> accepts a public key and assistant ID per browser, saved locally there. The source is `web/`. Starting a call consumes Vapi credit. Browser access is not guest authentication. Restrict the public key to the exact origin and assistant; monitor usage.
 
-The deployed page is <https://potala-voice-demo-2026.ochrescout3.chatgpt.site>. Visitors can open the link, but each browser must enter the **public** Vapi key and Potala assistant ID in its setup panel. These values are stored locally in that browser. Do not enter a private key.
+## Before real restaurant use
 
-In Vapi, restrict the public key to the page origin `https://potala-voice-demo-2026.ochrescout3.chatgpt.site` and to the Potala assistant. The page can be built from `web/` with `npm install && npm run build`. Start Conversation opens a Vapi web call and uses call credit; saving setup does not. The page itself has no call quota or guest authentication, so share the key only with intended testers.
-
-If you move to another Vapi account, recreate/publish the assistant and its two tools there, point the tools at the corresponding Make scenarios, create a new restricted public key, and replace the public key and assistant ID in each browser's setup panel. The Make scenarios and demo calendar can remain if their webhook and connection settings are unchanged.
-
-## 5. Before real restaurant use
-
-Obtain approval for real bookings, choose a production calendar, resolve simultaneous booking capacity, define holiday and large-party policies, set retention and privacy rules, and connect an inbound phone number. Run end-to-end production tests before changing the spoken demo disclaimer.
+Add atomic capacity handling, actual caller verification, explicit cancellation and recovery policy, holiday/special-hours rules, privacy and retention, staff review, a production calendar, delivery confirmations, and an inbound phone number. Keep demo language until the restaurant approves and verifies production.
