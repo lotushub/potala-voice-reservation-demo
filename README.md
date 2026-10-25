@@ -21,7 +21,7 @@ German-first, English-capable voice assistant for practice indoor table bookings
 | Web | Start Conversation page uses a restricted Vapi **public** key and assistant ID entered by each browser |
 | Notifications | Planned; no SMS/email module or delivery confirmation |
 
-For exact rules see [workflow](docs/workflow.md). For restoring the setup and moving to a **different Vapi organization**, see [setup](docs/setup.md). For how a guest receives a reference and the SMS/email design, see [confirmations](docs/confirmations.md). The [test record](docs/test-plan.md) separates verified Make tests from untested voice paths. The [current prompt](docs/vapi-system-prompt.md) is a reference copy; compare it with the published Vapi assistant before republishing.
+For a short explanation, see [how the project works](docs/project-overview.md). For exact rules see [workflow](docs/workflow.md). For restoring the setup and moving to a **different Vapi organization**, see [setup](docs/setup.md). For how a guest receives a reference and the SMS/email design, see [confirmations](docs/confirmations.md). The [test record](docs/test-plan.md) separates verified Make tests from untested voice paths. The [current prompt](docs/vapi-system-prompt.md) is a reference copy; compare it with the published Vapi assistant before republishing.
 
 ## Files
 
