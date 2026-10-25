@@ -1,47 +1,28 @@
-# Potala reservation assistant — to-do list
+# Potala reservation assistant checklist
 
-Updated 23 October 2026. Presentation: Monday, 2 November 2026.
+Updated 25 October 2026. This is a demo calendar, not the restaurant's live reservation system.
 
-## Completed
+## Working and observed
 
-- [x] Create separate Make scenarios for indoor availability and demo calendar booking.
-- [x] Connect Vapi availability and booking tools to the respective Make webhooks.
-- [x] Use the Potala demo Google Calendar and create 90-minute events.
-- [x] Apply 15-table capacity, 1–4 guests per table, future start times, and a search limit of 100 events in both scenarios.
-- [x] Apply restaurant start-time rules in both Make filters: Monday closed; Tuesday–Friday lunch 11:30, 12:00, 12:30 and dinner every 30 minutes from 17:00 through 20:30; Saturday dinner 17:00–20:30; Sunday dinner 17:00–19:30. Timezone: Europe/Zurich.
-- [x] Test availability: Saturday lunch rejected and dinner accepted; Sunday 18:00 accepted and 20:00 rejected; Monday rejected; Tuesday lunch accepted.
-- [x] Test booking rejection for Saturday lunch, and successful Tuesday lunch booking with matching 12:00–13:30 demo calendar event.
-- [x] Activate the two demo Make scenarios and clear old webhook test data before activation.
-- [x] Publish a German-first Vapi assistant with spoken demo disclosure and confirmation before booking.
-- [x] Change Vapi transcription from English-only to Deepgram Nova 3 German; German guest count is now recognized.
-- [x] Improve the German voice language; spoken conversation now works.
-- [x] Add the short reservation-time question to the Vapi reservation flow (confirm it was saved/published in the assistant).
-- [x] Build and privately publish the Start Conversation page. It awaits the owner's public Vapi key and assistant ID before it can start a call.
-- [x] Prepare project workflow, setup, tests, presentation notes, page source, and sanitized Make blueprint references in a downloadable package.
-- [x] Create a private GitHub repository and upload the project package.
-- [x] Update the restaurant-style demo page and publish it as a public link. Visitors still need a restricted Vapi public key and assistant ID.
-- [x] Open the private page in a standalone browser tab, verify sound from the built-in microphone with the free local check, and complete a short Vapi web call: “4 Personen” was transcribed and the assistant asked for a date.
+- [x] Availability Make scenario applies future start, Zurich time, weekday start-time rules, and demo 15-table capacity.
+- [x] Combined Book or Change Make scenario replaces separate active booking/change scenarios under the two-active-scenario constraint.
+- [x] Combined scenario: `action=book` creates a 90-minute event with name, guests, optional phone, and a short `bookingRef`; `action=change` verifies reference+saved phone and updates the same event.
+- [x] Confirm combined Make actions with fictional data; reject Monday booking and Saturday lunch change.
+- [x] Publish Vapi assistant with German first message, English switch, multilingual transcription, and three tools for availability, booking, change.
+- [x] Short voice test: change intent without a reference was handled in English and did not call booking/availability tools.
+- [x] Public Start Conversation page built and linked from README.
 
-## Next session — 22 October
+## Remaining for the demo
 
-- [x] Save and publish the short time question and date clarification wording in the Vapi reservation flow (confirmed by the owner on 22 October).
-- [ ] Run one complete Vapi Talk reservation for a fresh future date and confirm exact date, time, guests, name, 90-minute calendar event, and honest demo-only confirmation. Do not run a positive test against an already booked demo slot unless intentional.
-- [ ] Test one closed-day or out-of-hours request by voice; verify that no calendar event is created.
-- [ ] If pauses persist, inspect a specific call’s transcript and per-turn latency in Vapi Logs → Calls. Distinguish waiting for speech, model delay, and tool delay before changing providers.
-- [ ] Verify the Vapi **public** key is restricted to the Potala page origin and assistant. Browser setup, microphone permission, and a short call were tested.
-- [x] Complete a booking through the page to a future open slot and confirm the matching demo calendar event.
-- [ ] Verify the published date clarification wording during the final low-credit call. Listen to the greeting recording before changing pronunciation based on the transcript alone.
-- [ ] Prepare a short presentation script and workflow view for 2 November, using a future open date because Monday is normally closed.
-- [ ] Replace the reconstructed prompt reference with the exact published Vapi prompt.
-- [x] Add optional `phone` string to Vapi booking tool and map `phone` to the live Make Calendar description; verify with a direct webhook test using a fictional number.
-- [x] Publish the revised Vapi assistant prompt and booking tool v3; verify a fictional number in one end-to-end voice booking.
-- [ ] Add a separate lookup and change/cancel flow for existing reservations, with a booking reference and identity check before updating an event.
+- [ ] Verify one complete **spoken change** using a known fictional reference and phone, with one new open slot; then check the same Calendar event moved. Keep Vapi/Make credit use low.
+- [ ] Add **optional email** confirmation or **opt-in SMS** after successful booking and change; see [confirmations](confirmations.md). No notification delivery is live yet.
+- [ ] Export/sanitize the **current combined** Make blueprint into the repo. Existing `make/` exports are older references.
+- [ ] Confirm new Vapi organization's balance and recreate three tools and assistant if changing organizations; update the web page's public key and assistant ID in each browser.
+- [ ] Review the live Vapi prompt against [prompt reference](vapi-system-prompt.md); track any later UI edits.
 
 ## Before real restaurant use
 
-- [ ] Replace the demo calendar and demo-only language only after restaurant approval and end-to-end production testing.
-- [ ] Resolve simultaneous-booking capacity: Make's sequential-processing setting conflicts with the current Webhook response modules, so 15-table availability is not yet an atomic reservation lock.
-- [ ] Define large-party handling, contact details, cancellations, holidays/exceptions, and staff escalation.
-- [ ] Connect and test the restaurant's actual inbound phone number, privacy/retention settings, and operational monitoring.
-
-Keep webhook URLs and calendar/connection identifiers out of any shared or public materials.
+- [ ] Resolve concurrent capacity checks so two calls cannot book the last table.
+- [ ] Verify caller ownership for booking changes; reference plus spoken phone is insufficient.
+- [ ] Set cancellation, holiday exceptions, staff escalation, contact consent, notification failure, data retention, and privacy rules.
+- [ ] Set up production calendar and inbound phone routing and run approved end-to-end tests.
