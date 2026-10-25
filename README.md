@@ -1,38 +1,32 @@
-# Potala AI reservation demo
+# Potala AI voice reservation demo
 
-A German-first voice reservation demonstration for Potala Restaurant in Olten. The assistant speaks through Vapi, calls two Make scenarios, and reads/writes a separate Google Calendar used only for practice reservations.
+German-first, English-capable voice assistant for practice indoor table bookings at Potala Restaurant in Olten. **Demo calendar only:** it does not create real restaurant reservations.
 
-**Status (23 October 2026):** the Vapi assistant and both Make scenarios have been tested; the public demo page is published. A visitor needs a restricted Vapi public key and assistant ID from the host to start a call. This is a demo, not the live restaurant booking service.
+**Status (25 October 2026):** Two active Make scenarios support availability, new bookings, and changes. The web page launches the Vapi assistant. A new booking returns a short `bookingRef`; the assistant reads it aloud. Automatic SMS/email confirmations and cancellations are not implemented.
 
-The optional phone-number mapping is now verified end to end: the published Vapi booking tool v3 passed a fictional number through Make into a new demo Calendar event during a web voice call. The agent currently creates bookings but has no lookup, change, or cancellation tool for existing events.
+## Flow
 
-## Architecture
+- Web page or Vapi test call → Potala Vapi assistant → availability Make scenario → demo Google Calendar.
+- Confirmed new booking → combined Make scenario (`action=book`) → 90-minute calendar event with name, guests, optional phone, and booking reference → `{"success":true,"bookingRef":"..."}`.
+- Confirmed change → same combined scenario (`action=change`) → verifies reference and saved phone, checks the proposed slot excluding the original event, updates that event → `{"success":true}`.
+- A booking reference is spoken after a successful booking. It is **not** sent by SMS or email today. The caller needs the reference and saved phone to request a change.
 
-```mermaid
-flowchart LR
-    A[Guest speaks] --> B[Vapi assistant]
-    B --> C[Make availability]
-    B --> D[Make booking]
-    C --> E[Demo Google Calendar]
-    D --> E
-```
+## Current configuration
 
-Vapi handles speech, dialogue, and tool calls. Make applies the reservation rules. Google Calendar stores demo events. The browser page starts a web call to the existing Vapi assistant; it does not call Make directly.
+| Component | State |
+| --- | --- |
+| Make | Availability scenario and combined Book or Change scenario active |
+| Calendar | Separate demo calendar; one 90-minute event per table |
+| Vapi | Three API Request tools: availability, booking, change; German first, switch to English on request/speech |
+| Web | Start Conversation page uses a restricted Vapi **public** key and assistant ID entered by each browser |
+| Notifications | Planned; no SMS/email module or delivery confirmation |
+
+For exact rules see [workflow](docs/workflow.md). For restoring the setup and moving to a **different Vapi organization**, see [setup](docs/setup.md). For how a guest receives a reference and the SMS/email design, see [confirmations](docs/confirmations.md). The [test record](docs/test-plan.md) separates verified Make tests from untested voice paths. The [current prompt](docs/vapi-system-prompt.md) is a reference copy; compare it with the published Vapi assistant before republishing.
 
 ## Files
 
-- [`docs/workflow.md`](docs/workflow.md): exact business flow, operating rules, and limitations.
-- [`docs/setup.md`](docs/setup.md): reconnecting Vapi, Make, Google Calendar, and the public demo page.
-- [`docs/test-plan.md`](docs/test-plan.md): verified tests and the minimal final test.
-- [`docs/presentation.md`](docs/presentation.md): a short presentation script.
-- [`docs/vapi-prompt-reference.md`](docs/vapi-prompt-reference.md): a prompt reference reconstructed from the working design. Copy the actual published prompt from Vapi before treating this as an exact backup.
-- [`docs/vapi-system-prompt.md`](docs/vapi-system-prompt.md): revised paste-ready system prompt based on the prompt supplied by the owner on 23 October 2026.
-- [`docs/change-booking-plan.md`](docs/change-booking-plan.md): requirements and a low-credit plan for changing existing reservations later.
-- [`make/`](make/): sanitized reference exports of the two scenarios. Reconnect webhooks, Google connections, and calendar after importing.
-- [`web/`](web/): source for the public Start Conversation page.
+- `web/`: source of Start Conversation page.
+- `make/`: older sanitized reference exports; **these do not include the live combined booking/change scenario**. Export and sanitize the current combined blueprint before treating this repo as a full backup.
+- `docs/`: workflow, setup, confirmations, prompt, test record, and checklist.
 
-## Privacy and deployment
-
-Do not commit Make webhook URLs, Google Calendar IDs, private Vapi keys, customer data, or a downloaded unredacted Make blueprint. The `web/` page asks for a **public** Vapi key and assistant ID, saves them only in that browser, and starts a call only after a click. Restrict that public key to the page origin and the Potala assistant in Vapi.
-
-The public presentation page is at <https://potala-voice-demo-2026.ochrescout3.chatgpt.site>. It contains no embedded Vapi key. Give a restricted public key and assistant ID only to intended testers; anyone with those values can initiate a call from the allowed page origin and consume Vapi credit.
+Public demo page: <https://potala-voice-demo-2026.ochrescout3.chatgpt.site>. Do not put Make webhook URLs, private Vapi keys, Google Calendar IDs, real contact details, or unredacted blueprints in GitHub. A restricted public key still permits calls and can consume Vapi credit. For production, address concurrency, customer verification, exceptions, consent, data retention, and inbound phone routing.
