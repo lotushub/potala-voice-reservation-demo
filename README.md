@@ -26,7 +26,7 @@ For exact rules see [workflow](docs/workflow.md). For restoring the setup and mo
 ## Files
 
 - `web/`: source of Start Conversation page.
-- `make/`: older sanitized reference exports; **these do not include the live combined booking/change scenario**. Export and sanitize the current combined blueprint before treating this repo as a full backup.
+- `make/`: sanitized reference exports, including the combined booking/change blueprint. Reconnect webhook, Google connection, and demo calendar after import; these are not one-click live backups.
 - `docs/`: workflow, setup, confirmations, prompt, test record, and checklist.
 
 Public demo page: <https://potala-voice-demo-2026.ochrescout3.chatgpt.site>. Do not put Make webhook URLs, private Vapi keys, Google Calendar IDs, real contact details, or unredacted blueprints in GitHub. A restricted public key still permits calls and can consume Vapi credit. For production, address concurrency, customer verification, exceptions, consent, data retention, and inbound phone routing.
