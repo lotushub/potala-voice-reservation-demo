@@ -34,7 +34,7 @@ Changing the Vapi organization does not require changing the existing Make scena
 
 ## 4. Public page
 
-<https://potala-voice-demo-2026.ochrescout3.chatgpt.site> accepts a public key and assistant ID per browser, saved locally there. The source is `web/`. Starting a call consumes Vapi credit. Browser access is not guest authentication. Restrict the public key to the exact origin and assistant; monitor usage.
+<https://potala-voice-demo-2026.ochrescout3.chatgpt.site> accepts a public key and assistant ID per browser, saved locally there. The source is `web/`. The deployed page now uses Potala-inspired blue, red, cream, and orange styling. Starting a call consumes Vapi credit. [Hosting alternatives](deployment.md). Browser access is not guest authentication. Restrict the public key to the exact origin and assistant; monitor usage.
 
 ## Before real restaurant use
 
