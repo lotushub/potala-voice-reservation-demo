@@ -8,24 +8,38 @@ let saved = {};
 try { saved = JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch { saved = {}; }
 
 app.innerHTML = `
-  <main class="shell">
-    <header class="topbar"><a class="brand-lockup" href="#top" aria-label="Potala demo home"><span class="brand-mark">P</span><span class="brand">POTALA <small>RESTAURANT · OLTEN</small></span></a><nav aria-label="Page sections"><a href="#experience">Experience</a><a href="#hours">Demo hours</a></nav><span class="badge">PRACTICE DEMO</span></header>
-    <section class="hero" id="top">
-      <div class="hero-copy"><div class="eyebrow">A VOICE RESERVATION EXPERIENCE <span class="line"></span> OLTEN, SWITZERLAND</div><h1>A table begins<br><em>with a conversation.</em></h1><p class="intro">Meet Potala’s German-speaking reservation assistant. Ask for a table, check an available time, and see how a practice reservation reaches the demo calendar.</p><div class="hero-tags"><span>Deutsch first</span><span>1–4 guests</span><span>Europe/Zurich</span></div></div>
-      <aside class="invitation" aria-label="Demo information"><div class="invitation-top"><span>THE POTALA EXPERIENCE</span><span>01 / 03</span></div><div class="mandala" aria-hidden="true"><i></i><i></i><i></i><i></i><b>P</b></div><div class="invitation-bottom"><strong>A warm welcome,<br>one conversation away.</strong><span>VOICE · AVAILABILITY · CALENDAR</span></div></aside>
+  <header class="topbar" id="top">
+    <div class="topbar-inner">
+      <a class="brand-lockup" href="#top" aria-label="Potala Demo Startseite"><span class="brand-mark">✦</span><span class="brand">POTALA <small>RESTAURANT · OLTEN</small></span></a>
+      <nav aria-label="Seitennavigation"><a href="#experience">Sprachdemo</a><a href="#hours">Öffnungszeiten</a><a href="https://www.potalarestaurant.com/" target="_blank" rel="noopener noreferrer">Restaurant ↗</a></nav>
+      <span class="badge">TESTVERSION</span>
+    </div>
+  </header>
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-shade"></div>
+      <div class="hero-copy">
+        <span class="eyebrow">POTALA RESTAURANT · OLTEN</span>
+        <h1 id="hero-title">Tibetische &amp;<br>Asiatische Spezialitäten</h1>
+        <p>Ein Tisch beginnt mit einem Gespräch. Entdecken Sie unseren KI-Reservierungsassistenten als Testversion.</p>
+        <a class="hero-link" href="#experience">Sprachdemo starten <span aria-hidden="true">↗</span></a>
+      </div>
     </section>
-    <section class="experience" id="experience"><div class="section-heading"><span class="eyebrow">BEGIN THE DEMONSTRATION</span><h2>Speak with the assistant</h2><p>Choose a future open date and use fictional guest details. This page creates practice entries only.</p></div>
-      <div class="call-panel"><div class="orb-wrap"><div class="orb" id="orb"><div class="orb-inner"></div></div></div><div class="call-copy"><div class="kicker">POTALA ASSISTANT</div><h3 id="call-title">Ready to talk</h3><p id="call-status" role="status" aria-live="polite">Set up this browser once, then start when you’re ready.</p></div><button id="call-button" class="call-button" type="button" disabled>Start Conversation <span aria-hidden="true">↗</span></button></div>
-      <div class="audio-check" id="audio-check"><div><strong>Check your microphone first</strong><p id="mic-status" role="status" aria-live="polite">This local check does not start a Vapi call or use credit.</p></div><button id="mic-button" type="button">Check microphone</button></div>
-      <div class="preview-warning" id="preview-warning" hidden>Open the Potala page in its own browser tab before calling. Microphone access in this embedded preview may differ from the site’s permission. <a href="https://potala-voice-demo-2026.ochrescout3.chatgpt.site" target="_blank" rel="noopener noreferrer">Open full page ↗</a></div>
-      <p class="demo-note">Practice demonstration only: no real restaurant reservation is made. A conversation uses the host’s Vapi call credit.</p>
+    <div class="brand-ribbon"><span>✦</span> P O T A L A <span>✦</span></div>
+    <section class="experience shell" id="experience">
+      <div class="section-heading"><span class="eyebrow">EINE RESERVIERUNG IM GESPRÄCH</span><h2>Sprechen Sie mit unserem Assistenten.</h2><p>Fragen Sie auf Deutsch oder Englisch nach einem freien Termin, oder ändern Sie eine bestehende Testbuchung.</p></div>
+      <div class="call-panel"><div class="orb-wrap"><div class="orb" id="orb"><div class="orb-inner"></div></div></div><div class="call-copy"><div class="kicker">POTALA SPRACHASSISTENT</div><h3 id="call-title">Bereit zum Gespräch</h3><p id="call-status" role="status" aria-live="polite">Richten Sie diesen Browser einmal ein und starten Sie dann das Gespräch.</p></div><button id="call-button" class="call-button" type="button" disabled>Gespräch starten <span aria-hidden="true">↗</span></button></div>
+      <div class="audio-check" id="audio-check"><div><strong>Mikrofon zuerst prüfen</strong><p id="mic-status" role="status" aria-live="polite">Dieser lokale Test startet keinen Vapi-Anruf und kostet kein Guthaben.</p></div><button id="mic-button" type="button">Mikrofon prüfen</button></div>
+      <div class="preview-warning" id="preview-warning" hidden>Bitte öffnen Sie die Potala-Seite vor einem Anruf in einem eigenen Browser-Tab. In dieser Vorschau kann der Mikrofonzugriff anders funktionieren. <a href="https://potala-voice-demo-2026.ochrescout3.chatgpt.site" target="_blank" rel="noopener noreferrer">Vollständige Seite öffnen ↗</a></div>
+      <p class="demo-note">Dies ist eine Testversion mit einem separaten Demo-Kalender. Es wird keine echte Restaurantreservierung vorgenommen. Ein Anruf verbraucht Vapi-Guthaben.</p>
     </section>
-    <section class="details"><div class="steps"><div class="eyebrow">HOW IT WORKS</div><h2>From hello to<br><em>the calendar.</em></h2><div class="step"><b>01</b><span>Ask for a future open day, time, and 1–4 guests.</span></div><div class="step"><b>02</b><span>Give a fictional name and confirm the details.</span></div><div class="step"><b>03</b><span>On success, a 90-minute practice event is added to the demo calendar.</span></div></div>
-      <div class="hours" id="hours"><div class="eyebrow">DEMO RESERVATION START TIMES</div><h2>Plan a time to try.</h2><div class="hours-row"><span>Monday</span><strong>Closed</strong></div><div class="hours-row"><span>Tuesday – Friday</span><strong>11:30–12:30 · 17:00–20:30</strong></div><div class="hours-row"><span>Saturday</span><strong>17:00–20:30</strong></div><div class="hours-row"><span>Sunday</span><strong>17:00–19:30</strong></div><p>Start times are at 30-minute intervals. These are the demo booking rules, not a live availability promise.</p></div>
-    </section>
-    <section class="setup-band"><div class="setup-intro"><span class="eyebrow">FOR INVITED TESTERS</span><h2>One-time browser setup</h2><p>The host can give you a <strong>restricted Vapi public key</strong> and Potala assistant ID. Enter them here once; this browser stores them locally. Never enter a private API key.</p><p class="small-note">A phone number spoken during the current demo is not added to the calendar event. Use fictional contact details.</p></div><div class="setup" id="setup"><label for="public-key">Vapi public key</label><input id="public-key" type="text" spellcheck="false" autocomplete="off" placeholder="Public key from the host" /><label for="assistant-id">Assistant ID</label><input id="assistant-id" type="text" spellcheck="false" autocomplete="off" placeholder="Potala assistant ID" /><button id="save-settings" type="button">Save in this browser</button><p class="setup-feedback" id="setup-feedback" role="status" aria-live="polite"></p></div></section>
-    <footer><span>Potala Restaurant · Olten</span><span>Reservation assistant demonstration · Europe/Zurich</span></footer>
-  </main>`;
+    <section class="story-band"><div class="shell story-grid">
+      <div class="steps"><span class="eyebrow">SO FUNKTIONIERT DIE DEMO</span><h2>Von der Anfrage<br>zum Kalender.</h2><div class="step"><b>01</b><span>Wählen Sie ein zukünftiges Datum, eine Uhrzeit und 1–4 Personen.</span></div><div class="step"><b>02</b><span>Bestätigen Sie die Angaben mit einem erfundenen Namen.</span></div><div class="step"><b>03</b><span>Bei Erfolg wird ein 90-minütiger Testtermin gespeichert und eine Buchungsreferenz genannt.</span></div></div>
+      <div class="hours" id="hours"><span class="eyebrow">MÖGLICHE STARTZEITEN IN DER DEMO</span><h2>Öffnungszeiten</h2><div class="hours-row"><span>Montag</span><strong>Geschlossen</strong></div><div class="hours-row"><span>Dienstag – Freitag</span><strong>11:30–12:30 · 17:00–20:30</strong></div><div class="hours-row"><span>Samstag</span><strong>17:00–20:30</strong></div><div class="hours-row"><span>Sonntag</span><strong>17:00–19:30</strong></div><p>Startzeiten im 30-Minuten-Takt. Diese Regeln gelten für die Demo und garantieren keinen freien Tisch.</p></div>
+    </div></section>
+    <section class="setup-band shell"><div class="setup-intro"><span class="eyebrow">FÜR EINGELADENE TESTPERSONEN</span><h2>Einmalig im Browser einrichten</h2><p>Der Gastgeber gibt Ihnen einen eingeschränkten <strong>öffentlichen Vapi-Schlüssel</strong> und die Assistant ID. Nur in diesem Browser speichern. Bitte niemals einen privaten API-Schlüssel eingeben.</p><p class="small-note">Eine freiwillig genannte Telefonnummer wird in der Beschreibung des Demo-Kalendereintrags gespeichert. Verwenden Sie für Tests erfundene Angaben.</p></div><div class="setup" id="setup"><label for="public-key">Öffentlicher Vapi-Schlüssel</label><input id="public-key" type="text" spellcheck="false" autocomplete="off" placeholder="Vom Gastgeber erhalten" /><label for="assistant-id">Assistant ID</label><input id="assistant-id" type="text" spellcheck="false" autocomplete="off" placeholder="Potala Assistant ID" /><button id="save-settings" type="button">In diesem Browser speichern</button><p class="setup-feedback" id="setup-feedback" role="status" aria-live="polite"></p></div></section>
+  </main>
+  <footer><div class="shell footer-grid"><div><strong>Potala Restaurant</strong><span>Neuhardstrasse 20 · 4600 Olten</span></div><div><strong>Demo-Reservierungen</strong><span>Europe/Zurich · Keine echten Buchungen</span></div><a href="https://www.potalarestaurant.com/" target="_blank" rel="noopener noreferrer">Zur Restaurantseite ↗</a></div></footer>`;
 
 const keyInput = document.querySelector('#public-key');
 const idInput = document.querySelector('#assistant-id');
@@ -47,22 +61,22 @@ let starting = false;
 let inCall = false;
 
 function setStatus(title, detail) { callTitle.textContent = title; callStatus.textContent = detail; }
-function resetCall() { starting = false; inCall = false; orb.classList.remove('active'); callButton.disabled = embedded; callButton.innerHTML = 'Start Conversation <span aria-hidden="true">↗</span>'; }
+function resetCall() { starting = false; inCall = false; orb.classList.remove('active'); callButton.disabled = embedded || !vapi; callButton.innerHTML = 'Gespräch starten <span aria-hidden="true">↗</span>'; }
 function wire(client) {
-  client.on('call-start', () => { starting = false; inCall = true; orb.classList.add('active'); setStatus('Conversation live', 'Speak naturally. Press End Conversation when finished.'); callButton.disabled = false; callButton.textContent = 'End Conversation'; });
-  client.on('call-end', () => { resetCall(); setStatus('Conversation ended', 'You can start another call when you choose.'); });
-  client.on('error', (error) => { console.error('Vapi call error', error); resetCall(); setStatus('Could not connect', 'Check your public key, assistant ID, microphone permission, and browser connection.'); });
+  client.on('call-start', () => { starting = false; inCall = true; orb.classList.add('active'); setStatus('Gespräch läuft', 'Sprechen Sie frei. Beenden Sie das Gespräch mit dem Knopf.'); callButton.disabled = false; callButton.textContent = 'Gespräch beenden'; });
+  client.on('call-end', () => { resetCall(); setStatus('Gespräch beendet', 'Sie können später erneut starten.'); });
+  client.on('error', (error) => { console.error('Vapi call error', error); resetCall(); setStatus('Verbindung fehlgeschlagen', 'Bitte öffentlichen Schlüssel, Assistant ID, Mikrofonberechtigung und Internetverbindung prüfen.'); });
 }
 function configure() {
-  if (!saved.key || !saved.assistantId) { callButton.disabled = true; setStatus('Ready to set up', 'Enter your public key and assistant ID below.'); return; }
+  if (!saved.key || !saved.assistantId) { vapi = null; callButton.disabled = true; setStatus('Einrichtung nötig', 'Bitte unten den öffentlichen Schlüssel und die Assistant ID eingeben.'); return; }
   vapi = new Vapi(saved.key);
   wire(vapi);
   callButton.disabled = embedded;
-  setStatus('Ready to talk', embedded ? 'Open the full page in a new tab before starting.' : 'Check your microphone below, then click Start Conversation.');
+  setStatus('Bereit zum Gespräch', embedded ? 'Öffnen Sie die vollständige Seite in einem neuen Tab.' : 'Prüfen Sie das Mikrofon und klicken Sie auf Gespräch starten.');
 }
 micButton.addEventListener('click', async () => {
   micButton.disabled = true;
-  micStatus.textContent = 'Requesting microphone access…';
+  micStatus.textContent = 'Mikrofonzugriff wird angefragt…';
   let stream, context;
   try {
     if (!navigator.mediaDevices?.getUserMedia) throw new Error('Microphone access is unavailable in this browser context.');
@@ -77,7 +91,7 @@ micButton.addEventListener('click', async () => {
     let loudest = 0;
     const device = stream.getAudioTracks()[0]?.label || 'browser default microphone';
     for (let i = 0; i < 80; i++) {
-      if (i % 10 === 0) micStatus.textContent = `Using ${device}. Speak now: “Potala test”. ${8 - i / 10} seconds left…`;
+      if (i % 10 === 0) micStatus.textContent = `Mikrofon: ${device}. Sprechen Sie jetzt. Noch ${8 - i / 10} Sekunden…`;
       await new Promise(resolve => setTimeout(resolve, 100));
       analyser.getFloatTimeDomainData(samples);
       let sum = 0;
@@ -85,9 +99,9 @@ micButton.addEventListener('click', async () => {
       loudest = Math.max(loudest, Math.sqrt(sum / samples.length));
       if (loudest > 0.004) heardSound = true;
     }
-    micStatus.textContent = heardSound ? `Sound detected from ${device}. You can start one short call.` : `No sound detected from ${device}. Check System Settings → Sound → Input, select the microphone you are speaking into, then retry this free check.`;
+    micStatus.textContent = heardSound ? `Ton erkannt über ${device}. Sie können einen kurzen Anruf starten.` : `Kein Ton über ${device} erkannt. Bitte System-Einstellungen → Ton → Eingabe prüfen und diesen kostenlosen Test wiederholen.`;
   } catch (error) {
-    micStatus.textContent = 'Microphone could not be used here. Open the full page in a new tab and allow its microphone permission.';
+    micStatus.textContent = 'Mikrofon nicht verfügbar. Öffnen Sie die vollständige Seite in einem neuen Tab und erlauben Sie den Zugriff.';
     console.error('Local microphone check failed', error);
   } finally {
     stream?.getTracks().forEach(track => track.stop());
@@ -98,20 +112,20 @@ micButton.addEventListener('click', async () => {
 saveButton.addEventListener('click', () => {
   const key = keyInput.value.trim();
   const assistantId = idInput.value.trim();
-  if (!key || !assistantId) { feedback.textContent = 'Enter both values to continue.'; return; }
-  if (inCall || starting) { feedback.textContent = 'End the current conversation before changing setup.'; return; }
+  if (!key || !assistantId) { feedback.textContent = 'Bitte beide Werte eingeben.'; return; }
+  if (inCall || starting) { feedback.textContent = 'Bitte zuerst das laufende Gespräch beenden.'; return; }
   saved = { key, assistantId };
   localStorage.setItem(storageKey, JSON.stringify(saved));
-  feedback.textContent = 'Saved in this browser. No call has started.';
+  feedback.textContent = 'In diesem Browser gespeichert. Es wurde kein Anruf gestartet.';
   configure();
 });
 callButton.addEventListener('click', async () => {
   if (!vapi || starting || embedded) return;
-  if (inCall) { callButton.disabled = true; setStatus('Ending conversation', 'Disconnecting…'); vapi.stop(); return; }
+  if (inCall) { callButton.disabled = true; setStatus('Gespräch wird beendet', 'Verbindung wird getrennt…'); vapi.stop(); return; }
   starting = true;
   callButton.disabled = true;
-  setStatus('Connecting', 'Allow microphone access if your browser asks.');
+  setStatus('Verbindung wird aufgebaut', 'Bitte erlauben Sie gegebenenfalls den Mikrofonzugriff.');
   try { await vapi.start(saved.assistantId); }
-  catch (error) { console.error('Vapi start failed', error); resetCall(); setStatus('Could not start', 'Check the public key, assistant ID, microphone permission, and browser connection.'); }
+  catch (error) { console.error('Vapi start failed', error); resetCall(); setStatus('Start fehlgeschlagen', 'Bitte öffentlichen Schlüssel, Assistant ID, Mikrofon und Internetverbindung prüfen.'); }
 });
 configure();
