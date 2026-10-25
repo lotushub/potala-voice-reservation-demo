@@ -16,7 +16,7 @@ Updated 25 October 2026. This is a demo calendar, not the restaurant's live rese
 
 - [ ] Verify one complete **spoken change** using a known fictional reference and phone, with one new open slot; then check the same Calendar event moved. Keep Vapi/Make credit use low.
 - [ ] Add **optional email** confirmation or **opt-in SMS** after successful booking and change; see [confirmations](confirmations.md). No notification delivery is live yet.
-- [ ] Export/sanitize the **current combined** Make blueprint into the repo. Existing `make/` exports are older references.
+- [x] Add a sanitized combined Make blueprint reference in `make/`. Reconnect and verify it after import; it is not an automatically restored live scenario.
 - [ ] Confirm new Vapi organization's balance and recreate three tools and assistant if changing organizations; update the web page's public key and assistant ID in each browser.
 - [ ] Review the live Vapi prompt against [prompt reference](vapi-system-prompt.md); track any later UI edits.
 
