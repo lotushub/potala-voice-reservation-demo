@@ -1,0 +1,2265 @@
+{
+  "name": "Potala Demo – Book or Change Indoor Reservation",
+  "flow": [
+    {
+      "id": 1,
+      "module": "gateway:CustomWebHook",
+      "version": 1,
+      "parameters": {
+        "maxResults": 1
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        },
+        "setupValidation": {
+          "result": {
+            "valid": true,
+            "fields": []
+          },
+          "version": 1,
+          "configuration": null
+        },
+        "restore": {
+          "parameters": {}
+        },
+        "parameters": [
+          {
+            "name": "hook",
+            "type": "hook:gateway-webhook",
+            "label": "Webhook",
+            "required": true
+          },
+          {
+            "name": "maxResults",
+            "type": "number",
+            "label": "Maximum number of results"
+          }
+        ],
+        "interface": [
+          {
+            "name": "action",
+            "type": "text",
+            "label": "action",
+            "required": false
+          },
+          {
+            "name": "date",
+            "type": "text",
+            "label": "date",
+            "required": false
+          },
+          {
+            "name": "time",
+            "type": "text",
+            "label": "time",
+            "required": false
+          },
+          {
+            "name": "guests",
+            "type": "text",
+            "label": "guests",
+            "required": false
+          },
+          {
+            "name": "name",
+            "type": "text",
+            "label": "name",
+            "required": false
+          },
+          {
+            "name": "phone",
+            "type": "text",
+            "label": "phone",
+            "required": false
+          },
+          {
+            "name": "bookingRef",
+            "type": "text",
+            "label": "bookingRef",
+            "required": false
+          },
+          {
+            "name": "newDate",
+            "type": "text",
+            "label": "newDate",
+            "required": false
+          },
+          {
+            "name": "newTime",
+            "type": "text",
+            "label": "newTime",
+            "required": false
+          },
+          {
+            "name": "newGuests",
+            "type": "text",
+            "label": "newGuests",
+            "required": false
+          }
+        ]
+      }
+    },
+    {
+      "id": 16,
+      "module": "builtin:BasicRouter",
+      "version": 1,
+      "parameters": {},
+      "mapper": null,
+      "metadata": {
+        "designer": {
+          "x": 250,
+          "y": 0
+        }
+      },
+      "routes": [
+        {
+          "flow": [
+            {
+              "id": 2,
+              "module": "google-calendar:searchEvents",
+              "version": 5,
+              "parameters": {
+                "__IMTCONN__": null
+              },
+              "mapper": {
+                "limit": "100",
+                "timeMax": "{{addMinutes(parseDate(1.date + 1.time; \"YYYY-MM-DD HH:mm\"; \"Europe/Zurich\"); 90)}}",
+                "timeMin": "{{parseDate(1.date + 1.time; \"YYYY-MM-DD HH:mm\"; \"Europe/Zurich\")}}",
+                "calendar": "SELECT_DEMO_CALENDAR",
+                "singleEvents": true
+              },
+              "metadata": {
+                "designer": {
+                  "x": 800,
+                  "y": -300
+                },
+                "setupValidation": {
+                  "result": {
+                    "valid": true,
+                    "fields": []
+                  },
+                  "version": 1,
+                  "configuration": null
+                },
+                "restore": {
+                  "expect": {
+                    "orderBy": {
+                      "mode": "chose",
+                      "label": "Empty"
+                    },
+                    "calendar": {
+                      "mode": "chose",
+                      "label": "Potala Reservation Demo"
+                    },
+                    "eventTypes": {
+                      "mode": "chose"
+                    }
+                  },
+                  "parameters": {
+                    "__IMTCONN__": null
+                  }
+                },
+                "parameters": [
+                  {
+                    "name": "__IMTCONN__",
+                    "type": "account:google",
+                    "label": "Connection",
+                    "required": true
+                  }
+                ],
+                "expect": [
+                  {
+                    "name": "calendar",
+                    "type": "select",
+                    "label": "Calendar ID",
+                    "required": true
+                  },
+                  {
+                    "name": "timeMin",
+                    "time": true,
+                    "type": "date",
+                    "label": "Start Date"
+                  },
+                  {
+                    "name": "timeMax",
+                    "time": true,
+                    "type": "date",
+                    "label": "End Date"
+                  },
+                  {
+                    "name": "updatedMin",
+                    "time": true,
+                    "type": "date",
+                    "label": "Updated from"
+                  },
+                  {
+                    "name": "singleEvents",
+                    "type": "boolean",
+                    "label": "Single Events",
+                    "required": true
+                  },
+                  {
+                    "name": "q",
+                    "type": "text",
+                    "label": "Query"
+                  },
+                  {
+                    "name": "eventTypes",
+                    "type": "select",
+                    "label": "Event Types",
+                    "multiple": true,
+                    "validate": {
+                      "enum": [
+                        "default",
+                        "fromGmail",
+                        "focusTime",
+                        "outOfOffice",
+                        "workingLocation"
+                      ]
+                    }
+                  },
+                  {
+                    "name": "orderBy",
+                    "type": "select",
+                    "label": "Order By",
+                    "validate": {
+                      "enum": [
+                        "startTime",
+                        "updated"
+                      ]
+                    }
+                  },
+                  {
+                    "name": "limit",
+                    "type": "uinteger",
+                    "label": "Limit"
+                  }
+                ]
+              },
+              "filter": {
+                "name": "Book request",
+                "conditions": [
+                  [
+                    {
+                      "a": "{{1.action}}",
+                      "o": "text:equal",
+                      "b": "book"
+                    }
+                  ]
+                ]
+              }
+            },
+            {
+              "id": 3,
+              "module": "builtin:BasicAggregator",
+              "version": 1,
+              "parameters": {
+                "feeder": 2
+              },
+              "filter": {
+                "name": "Only real events",
+                "conditions": [
+                  [
+                    {
+                      "a": "{{2.id}}",
+                      "o": "exist"
+                    }
+                  ]
+                ]
+              },
+              "mapper": {
+                "id": "{{2.id}}"
+              },
+              "metadata": {
+                "designer": {
+                  "x": 1100,
+                  "y": -300
+                },
+                "setupValidation": {
+                  "result": {
+                    "valid": true,
+                    "fields": []
+                  },
+                  "version": 1,
+                  "configuration": null
+                },
+                "restore": {
+                  "extra": {
+                    "feeder": {
+                      "label": "Google Calendar - Search Events [2]"
+                    },
+                    "target": {
+                      "label": "Custom"
+                    }
+                  }
+                },
+                "advanced": true
+              }
+            },
+            {
+              "id": 5,
+              "module": "builtin:BasicRouter",
+              "version": 1,
+              "parameters": {
+                "else": 1
+              },
+              "mapper": null,
+              "metadata": {
+                "designer": {
+                  "x": 1400,
+                  "y": -300
+                }
+              },
+              "routes": [
+                {
+                  "flow": [
+                    {
+                      "id": 15,
+                      "module": "util:SetVariables",
+                      "version": 1,
+                      "parameters": {},
+                      "filter": {
+                        "name": "Free slot",
+                        "conditions": [
+                          [
+                            {
+                              "a": "{{3.`__IMTAGGLENGTH__`}}",
+                              "b": "15",
+                              "o": "number:less"
+                            },
+                            {
+                              "a": "{{1.guests}}",
+                              "b": "4",
+                              "o": "number:lessorequal"
+                            },
+                            {
+                              "a": "{{1.guests}}",
+                              "b": "1",
+                              "o": "number:greaterorequal"
+                            },
+                            {
+                              "a": "{{switch(formatDate(parseDate(1.date; \"YYYY-MM-DD\"; \"Europe/Zurich\"); \"E\"; \"Europe/Zurich\"); 6; \"|17:00|17:30|18:00|18:30|19:00|19:30|20:00|20:30|\"; 7; \"|17:00|17:30|18:00|18:30|19:00|19:30|\"; \"|11:30|12:00|12:30|17:00|17:30|18:00|18:30|19:00|19:30|20:00|20:30|\")}}",
+                              "b": "|{{1.time}}|",
+                              "o": "text:contain"
+                            },
+                            {
+                              "a": "{{parseDate(1.date + 1.time; \"YYYY-MM-DD HH:mm\"; \"Europe/Zurich\")}}",
+                              "b": "{{now}}",
+                              "o": "date:greater"
+                            },
+                            {
+                              "a": "{{formatDate(parseDate(1.date; \"YYYY-MM-DD\"; \"Europe/Zurich\"); \"E\"; \"Europe/Zurich\")}}",
+                              "b": "1",
+                              "o": "number:notequal"
+                            }
+                          ]
+                        ]
+                      },
+                      "mapper": {
+                        "variables": [
+                          {
+                            "name": "bookingRef",
+                            "value": "{{substring(uuid; 0; 16)}}"
+                          }
+                        ]
+                      },
+                      "metadata": {
+                        "designer": {
+                          "x": 1697,
+                          "y": -547
+                        },
+                        "setupValidation": {
+                          "result": {
+                            "valid": true,
+                            "fields": []
+                          },
+                          "version": 1,
+                          "configuration": null
+                        },
+                        "restore": {
+                          "expect": {
+                            "variables": {
+                              "items": [
+                                null
+                              ]
+                            }
+                          }
+                        },
+                        "expect": [
+                          {
+                            "name": "variables",
+                            "spec": {
+                              "name": "value",
+                              "spec": [
+                                {
+                                  "name": "name",
+                                  "type": "text",
+                                  "label": "Variable name",
+                                  "required": true
+                                },
+                                {
+                                  "name": "value",
+                                  "type": "any",
+                                  "label": "Variable value"
+                                }
+                              ],
+                              "type": "collection",
+                              "label": "Variable"
+                            },
+                            "type": "array",
+                            "label": "Variables",
+                            "validate": {
+                              "unique": {
+                                "by": "name"
+                              },
+                              "minItems": 1
+                            }
+                          }
+                        ],
+                        "interface": [
+                          {
+                            "name": "bookingRef",
+                            "type": "any",
+                            "label": "bookingRef"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "id": 6,
+                      "module": "google-calendar:createAnEvent",
+                      "version": 5,
+                      "parameters": {
+                        "__IMTCONN__": null
+                      },
+                      "mapper": {
+                        "end": "{{addMinutes(parseDate(1.date + 1.time; \"YYYY-MM-DD HH:mm\"; \"Europe/Zurich\"); 90)}}",
+                        "start": "{{parseDate(1.date + 1.time; \"YYYY-MM-DD HH:mm\"; \"Europe/Zurich\")}}",
+                        "select": "detail",
+                        "summary": "DEMO reservation -{{1.name}}-{{1.guests}} guests",
+                        "calendar": "SELECT_DEMO_CALENDAR",
+                        "visibility": "default",
+                        "allDayEvent": false,
+                        "description": "Demo contact number: {{1.phone}}\nBooking reference: {{15.bookingRef}}",
+                        "transparency": "opaque",
+                        "conferenceDate": false,
+                        "guestPermissions": {
+                          "guestsCanModify": false,
+                          "guestsCanInviteOthers": true,
+                          "guestsCanSeeOtherGuests": true
+                        }
+                      },
+                      "metadata": {
+                        "designer": {
+                          "x": 2000,
+                          "y": -450
+                        },
+                        "setupValidation": {
+                          "result": {
+                            "valid": true,
+                            "fields": []
+                          },
+                          "version": 1,
+                          "configuration": null
+                        },
+                        "restore": {
+                          "expect": {
+                            "select": {
+                              "label": "In Detail"
+                            },
+                            "colorId": {
+                              "mode": "chose",
+                              "label": "Empty"
+                            },
+                            "calendar": {
+                              "mode": "chose",
+                              "label": "Potala Reservation Demo"
+                            },
+                            "attendees": {
+                              "mode": "chose"
+                            },
+                            "eventType": {
+                              "mode": "chose",
+                              "label": "Empty"
+                            },
+                            "overrides": {
+                              "mode": "chose"
+                            },
+                            "recurrence": {
+                              "mode": "chose"
+                            },
+                            "visibility": {
+                              "mode": "chose",
+                              "label": "Default"
+                            },
+                            "allDayEvent": {
+                              "mode": "chose"
+                            },
+                            "attachments": {
+                              "mode": "chose"
+                            },
+                            "sendUpdates": {
+                              "mode": "chose",
+                              "label": "Empty"
+                            },
+                            "transparency": {
+                              "mode": "chose",
+                              "label": "Busy"
+                            },
+                            "conferenceDate": {
+                              "mode": "chose"
+                            }
+                          },
+                          "parameters": {
+                            "__IMTCONN__": null
+                          }
+                        },
+                        "parameters": [
+                          {
+                            "name": "__IMTCONN__",
+                            "type": "account:google",
+                            "label": "Connection",
+                            "required": true
+                          }
+                        ],
+                        "expect": [
+                          {
+                            "name": "select",
+                            "type": "select",
+                            "label": "Create an Event",
+                            "required": true,
+                            "validate": {
+                              "enum": [
+                                "quick",
+                                "detail"
+                              ]
+                            }
+                          },
+                          {
+                            "name": "calendar",
+                            "type": "select",
+                            "label": "Calendar ID",
+                            "required": true
+                          },
+                          {
+                            "name": "summary",
+                            "type": "text",
+                            "label": "Event Name",
+                            "required": true
+                          },
+                          {
+                            "name": "conferenceDate",
+                            "type": "boolean",
+                            "label": "Add Google Meet Video Conferencing",
+                            "required": true
+                          },
+                          {
+                            "name": "attendees",
+                            "spec": {
+                              "name": "value",
+                              "spec": [
+                                {
+                                  "name": "displayName",
+                                  "type": "text",
+                                  "label": "Name"
+                                },
+                                {
+                                  "name": "email",
+                                  "type": "email",
+                                  "label": "Email",
+                                  "required": true
+                                }
+                              ],
+                              "type": "collection",
+                              "label": "Attendee"
+                            },
+                            "type": "array",
+                            "label": "Attendees"
+                          },
+                          {
+                            "name": "allDayEvent",
+                            "type": "boolean",
+                            "label": "All Day Event",
+                            "required": true
+                          },
+                          {
+                            "name": "start",
+                            "time": true,
+                            "type": "date",
+                            "label": "Start Date",
+                            "required": true
+                          },
+                          {
+                            "name": "end",
+                            "time": true,
+                            "type": "date",
+                            "label": "End Date"
+                          },
+                          {
+                            "name": "duration",
+                            "type": "time",
+                            "label": "Duration"
+                          },
+                          {
+                            "name": "eventType",
+                            "type": "select",
+                            "label": "Event Type",
+                            "validate": {
+                              "enum": [
+                                "outOfOffice",
+                                "focusTime"
+                              ]
+                            }
+                          },
+                          {
+                            "name": "colorId",
+                            "type": "select",
+                            "label": "Color"
+                          },
+                          {
+                            "name": "description",
+                            "type": "text",
+                            "label": "Description"
+                          },
+                          {
+                            "name": "location",
+                            "type": "text",
+                            "label": "Location"
+                          },
+                          {
+                            "name": "useDefault",
+                            "type": "boolean",
+                            "label": "Use the default reminder settings for this event"
+                          },
+                          {
+                            "name": "overrides",
+                            "spec": [
+                              {
+                                "name": "method",
+                                "type": "select",
+                                "label": "Method",
+                                "options": [
+                                  {
+                                    "label": "Email",
+                                    "value": "email"
+                                  },
+                                  {
+                                    "label": "Pop-up",
+                                    "value": "popup"
+                                  }
+                                ],
+                                "required": true
+                              },
+                              {
+                                "name": "minutes",
+                                "type": "uinteger",
+                                "label": "Minutes",
+                                "required": true,
+                                "validate": {
+                                  "max": 40320
+                                }
+                              }
+                            ],
+                            "type": "array",
+                            "label": "Reminders",
+                            "validate": {
+                              "maxItems": 5
+                            }
+                          },
+                          {
+                            "name": "transparency",
+                            "type": "select",
+                            "label": "Show me as",
+                            "required": true,
+                            "validate": {
+                              "enum": [
+                                "opaque",
+                                "transparent"
+                              ]
+                            }
+                          },
+                          {
+                            "name": "visibility",
+                            "type": "select",
+                            "label": "Visibility",
+                            "required": true,
+                            "validate": {
+                              "enum": [
+                                "default",
+                                "public",
+                                "private"
+                              ]
+                            }
+                          },
+                          {
+                            "name": "sendUpdates",
+                            "type": "select",
+                            "label": "Send notifications about the event creation",
+                            "validate": {
+                              "enum": [
+                                "all",
+                                "externalOnly",
+                                "none"
+                              ]
+                            }
+                          },
+                          {
+                            "name": "guestPermissions",
+                            "spec": [
+                              {
+                                "name": "guestsCanModify",
+                                "type": "boolean",
+                                "label": "Modify event",
+                                "required": true
+                              },
+                              {
+                                "name": "guestsCanInviteOthers",
+                                "type": "boolean",
+                                "label": "Invite others",
+                                "required": true
+                              },
+                              {
+                                "name": "guestsCanSeeOtherGuests",
+                                "type": "boolean",
+                                "label": "See guest list",
+                                "required": true
+                              }
+                            ],
+                            "type": "collection",
+                            "label": "Guest Permissions"
+                          },
+                          {
+                            "name": "recurrence",
+                            "spec": {
+                              "name": "value",
+                              "type": "text",
+                              "label": "Value"
+                            },
+                            "type": "array",
+                            "label": "Recurrence"
+                          },
+                          {
+                            "name": "attachments",
+                            "spec": [
+                              {
+                                "name": "fileUrl",
+                                "type": "url",
+                                "label": "File URL",
+                                "required": true
+                              }
+                            ],
+                            "type": "array",
+                            "label": "Attachments"
+                          }
+                        ],
+                        "advanced": true
+                      }
+                    },
+                    {
+                      "id": 10,
+                      "module": "gateway:WebhookRespond",
+                      "version": 1,
+                      "parameters": {},
+                      "mapper": {
+                        "body": "{\"success\":true,\"bookingRef\":\"{{15.bookingRef}}\"}",
+                        "status": "200",
+                        "headers": []
+                      },
+                      "metadata": {
+                        "designer": {
+                          "x": 2393,
+                          "y": -532
+                        },
+                        "setupValidation": {
+                          "result": {
+                            "valid": true,
+                            "fields": []
+                          },
+                          "version": 1,
+                          "configuration": "cd56a768250b788"
+                        },
+                        "restore": {
+                          "expect": {
+                            "headers": {
+                              "mode": "chose"
+                            }
+                          }
+                        },
+                        "expect": [
+                          {
+                            "name": "status",
+                            "type": "uinteger",
+                            "label": "Status",
+                            "required": true,
+                            "validate": {
+                              "min": 100
+                            }
+                          },
+                          {
+                            "name": "body",
+                            "type": "any",
+                            "label": "Body"
+                          },
+                          {
+                            "name": "headers",
+                            "spec": [
+                              {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key",
+                                "required": true,
+                                "validate": {
+                                  "max": 256
+                                }
+                              },
+                              {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value",
+                                "required": true,
+                                "validate": {
+                                  "max": 4096
+                                }
+                              }
+                            ],
+                            "type": "array",
+                            "label": "Custom headers",
+                            "validate": {
+                              "maxItems": 16
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "flow": [
+                    {
+                      "id": 7,
+                      "module": "gateway:WebhookRespond",
+                      "version": 1,
+                      "parameters": {},
+                      "filter": {
+                        "name": "Unavailable",
+                        "conditions": []
+                      },
+                      "mapper": {
+                        "body": "{\"success\":false,\"reason\":\"slot_unavailable\"}",
+                        "status": "200",
+                        "headers": []
+                      },
+                      "metadata": {
+                        "designer": {
+                          "x": 1700,
+                          "y": -150
+                        },
+                        "setupValidation": {
+                          "result": {
+                            "valid": true,
+                            "fields": []
+                          },
+                          "version": 1,
+                          "configuration": null
+                        },
+                        "restore": {
+                          "expect": {
+                            "headers": {
+                              "mode": "chose"
+                            }
+                          }
+                        },
+                        "expect": [
+                          {
+                            "name": "status",
+                            "type": "uinteger",
+                            "label": "Status",
+                            "required": true,
+                            "validate": {
+                              "min": 100
+                            }
+                          },
+                          {
+                            "name": "body",
+                            "type": "any",
+                            "label": "Body"
+                          },
+                          {
+                            "name": "headers",
+                            "spec": [
+                              {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key",
+                                "required": true,
+                                "validate": {
+                                  "max": 256
+                                }
+                              },
+                              {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value",
+                                "required": true,
+                                "validate": {
+                                  "max": 4096
+                                }
+                              }
+                            ],
+                            "type": "array",
+                            "label": "Custom headers",
+                            "validate": {
+                              "maxItems": 16
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "flow": [
+            {
+              "id": 22,
+              "module": "google-calendar:searchEvents",
+              "version": 5,
+              "parameters": {
+                "__IMTCONN__": null
+              },
+              "mapper": {
+                "q": "{{1.bookingRef}}",
+                "limit": "2",
+                "calendar": "SELECT_DEMO_CALENDAR",
+                "singleEvents": false
+              },
+              "metadata": {
+                "designer": {
+                  "x": 800,
+                  "y": 600
+                },
+                "setupValidation": {
+                  "result": {
+                    "valid": true,
+                    "fields": []
+                  },
+                  "version": 1,
+                  "configuration": null
+                },
+                "restore": {
+                  "expect": {
+                    "orderBy": {
+                      "mode": "chose",
+                      "label": "Empty"
+                    },
+                    "calendar": {
+                      "mode": "chose",
+                      "label": "Potala Reservation Demo"
+                    },
+                    "eventTypes": {
+                      "mode": "chose"
+                    }
+                  },
+                  "parameters": {
+                    "__IMTCONN__": null
+                  }
+                },
+                "parameters": [
+                  {
+                    "name": "__IMTCONN__",
+                    "type": "account:google",
+                    "label": "Connection",
+                    "required": true
+                  }
+                ],
+                "expect": [
+                  {
+                    "name": "calendar",
+                    "type": "select",
+                    "label": "Calendar ID",
+                    "required": true
+                  },
+                  {
+                    "name": "timeMin",
+                    "time": true,
+                    "type": "date",
+                    "label": "Start Date"
+                  },
+                  {
+                    "name": "timeMax",
+                    "time": true,
+                    "type": "date",
+                    "label": "End Date"
+                  },
+                  {
+                    "name": "updatedMin",
+                    "time": true,
+                    "type": "date",
+                    "label": "Updated from"
+                  },
+                  {
+                    "name": "singleEvents",
+                    "type": "boolean",
+                    "label": "Single Events",
+                    "required": true
+                  },
+                  {
+                    "name": "q",
+                    "type": "text",
+                    "label": "Query"
+                  },
+                  {
+                    "name": "eventTypes",
+                    "type": "select",
+                    "label": "Event Types",
+                    "multiple": true,
+                    "validate": {
+                      "enum": [
+                        "default",
+                        "fromGmail",
+                        "focusTime",
+                        "outOfOffice",
+                        "workingLocation"
+                      ]
+                    }
+                  },
+                  {
+                    "name": "orderBy",
+                    "type": "select",
+                    "label": "Order By",
+                    "validate": {
+                      "enum": [
+                        "startTime",
+                        "updated"
+                      ]
+                    }
+                  },
+                  {
+                    "name": "limit",
+                    "type": "uinteger",
+                    "label": "Limit"
+                  }
+                ]
+              },
+              "filter": {
+                "name": "Change request",
+                "conditions": [
+                  [
+                    {
+                      "a": "{{1.action}}",
+                      "o": "text:equal",
+                      "b": "change"
+                    },
+                    {
+                      "a": "{{length(1.bookingRef)}}",
+                      "o": "number:equal",
+                      "b": "16"
+                    },
+                    {
+                      "a": "{{length(1.phone)}}",
+                      "o": "number:greater",
+                      "b": "4"
+                    }
+                  ]
+                ]
+              }
+            },
+            {
+              "id": 23,
+              "module": "builtin:BasicAggregator",
+              "version": 1,
+              "parameters": {
+                "feeder": 22
+              },
+              "filter": {
+                "name": "Only real events.",
+                "conditions": [
+                  [
+                    {
+                      "a": "{{22.id}}",
+                      "o": "exist"
+                    }
+                  ]
+                ]
+              },
+              "mapper": {
+                "id": "{{22.id}}",
+                "end": "{{22.end}}",
+                "etag": "{{22.etag}}",
+                "kind": "{{22.kind}}",
+                "phone": "{{1.phone}}",
+                "start": "{{22.start}}",
+                "status": "{{22.status}}",
+                "colorId": "{{22.colorId}}",
+                "created": "{{22.created}}",
+                "creator": "{{22.creator}}",
+                "iCalUID": "{{22.iCalUID}}",
+                "newDate": "{{1.newDate}}",
+                "newTime": "{{1.newTime}}",
+                "summary": "{{22.summary}}",
+                "updated": "{{22.updated}}",
+                "htmlLink": "{{22.htmlLink}}",
+                "location": "{{22.location}}",
+                "sequence": "{{22.sequence}}",
+                "attendees": "{{22.attendees}}",
+                "eventType": "{{22.eventType}}",
+                "newGuests": "{{1.newGuests}}",
+                "organizer": "{{22.organizer}}",
+                "reminders": "{{22.reminders}}",
+                "bookingRef": "{{1.bookingRef}}",
+                "recurrence": "{{22.recurrence}}",
+                "visibility": "{{22.visibility}}",
+                "attachments": "{{22.attachments}}",
+                "description": "{{22.description}}",
+                "hangoutLink": "{{22.hangoutLink}}",
+                "__IMTINDEX__": "{{22.`__IMTINDEX__`}}",
+                "transparency": "{{22.transparency}}",
+                "__IMTLENGTH__": "{{22.`__IMTLENGTH__`}}",
+                "conferenceData": "{{22.conferenceData}}",
+                "guestsCanModify": "{{22.guestsCanModify}}",
+                "recurringEventId": "{{22.recurringEventId}}",
+                "originalStartTime": "{{22.originalStartTime}}",
+                "extendedProperties": "{{22.extendedProperties}}",
+                "guestsCanInviteOthers": "{{22.guestsCanInviteOthers}}",
+                "outOfOfficeProperties": "{{22.outOfOfficeProperties}}",
+                "guestsCanSeeOtherGuests": "{{22.guestsCanSeeOtherGuests}}",
+                "workingLocationProperties": "{{22.workingLocationProperties}}"
+              },
+              "metadata": {
+                "designer": {
+                  "x": 1100,
+                  "y": 600
+                },
+                "setupValidation": {
+                  "result": {
+                    "valid": true,
+                    "fields": []
+                  },
+                  "version": 1,
+                  "configuration": null
+                },
+                "restore": {
+                  "extra": {
+                    "feeder": {
+                      "label": "Google Calendar - Search Events [2]"
+                    },
+                    "target": {
+                      "label": "Custom"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "id": 24,
+              "module": "builtin:BasicRouter",
+              "version": 1,
+              "parameters": {
+                "else": 1
+              },
+              "mapper": null,
+              "metadata": {
+                "designer": {
+                  "x": 1400,
+                  "y": 600
+                }
+              },
+              "routes": [
+                {
+                  "flow": [
+                    {
+                      "id": 25,
+                      "module": "builtin:BasicFeeder",
+                      "version": 1,
+                      "parameters": {},
+                      "filter": {
+                        "name": "One matching reservation",
+                        "conditions": [
+                          [
+                            {
+                              "a": "{{length(23.array)}}",
+                              "b": "1",
+                              "o": "number:equal"
+                            }
+                          ]
+                        ]
+                      },
+                      "mapper": {
+                        "array": "{{23.array}}"
+                      },
+                      "metadata": {
+                        "designer": {
+                          "x": 1700,
+                          "y": 450
+                        },
+                        "setupValidation": {
+                          "result": {
+                            "valid": true,
+                            "fields": []
+                          },
+                          "version": 1,
+                          "configuration": null
+                        },
+                        "restore": {
+                          "expect": {
+                            "array": {
+                              "mode": "edit"
+                            }
+                          }
+                        },
+                        "expect": [
+                          {
+                            "mode": "edit",
+                            "name": "array",
+                            "spec": [],
+                            "type": "array",
+                            "label": "Array"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "id": 27,
+                      "module": "builtin:BasicRouter",
+                      "version": 1,
+                      "parameters": {
+                        "else": 1
+                      },
+                      "mapper": null,
+                      "metadata": {
+                        "designer": {
+                          "x": 2000,
+                          "y": 450
+                        }
+                      },
+                      "routes": [
+                        {
+                          "flow": [
+                            {
+                              "id": 28,
+                              "module": "google-calendar:searchEvents",
+                              "version": 5,
+                              "parameters": {
+                                "__IMTCONN__": null
+                              },
+                              "filter": {
+                                "name": "Reference and phone match",
+                                "conditions": [
+                                  [
+                                    {
+                                      "a": "{{25.description}}",
+                                      "b": "Booking reference: {{1.bookingRef}}",
+                                      "o": "text:contain"
+                                    },
+                                    {
+                                      "a": "{{25.description}}",
+                                      "b": "Demo contact number: {{1.phone}}",
+                                      "o": "text:contain"
+                                    }
+                                  ]
+                                ]
+                              },
+                              "mapper": {
+                                "limit": "100",
+                                "timeMax": "{{formatDate(addMinutes(parseDate(1.newDate + 1.newTime; \"YYYY-MM-DDHH:mm\"; \"Europe/Zurich\"); 90); \"YYYY-MM-DDTHH:mm:ssZ\"; \"Europe/Zurich\")}}",
+                                "timeMin": "{{formatDate(parseDate(1.newDate + 1.newTime; \"YYYY-MM-DDHH:mm\"; \"Europe/Zurich\"); \"YYYY-MM-DDTHH:mm:ssZ\"; \"Europe/Zurich\")}}",
+                                "calendar": "SELECT_DEMO_CALENDAR",
+                                "singleEvents": true
+                              },
+                              "metadata": {
+                                "designer": {
+                                  "x": 2300,
+                                  "y": 150
+                                },
+                                "setupValidation": {
+                                  "result": {
+                                    "valid": true,
+                                    "fields": []
+                                  },
+                                  "version": 1,
+                                  "configuration": null
+                                },
+                                "restore": {
+                                  "expect": {
+                                    "orderBy": {
+                                      "mode": "chose",
+                                      "label": "Empty"
+                                    },
+                                    "calendar": {
+                                      "mode": "chose",
+                                      "label": "Potala Reservation Demo"
+                                    },
+                                    "eventTypes": {
+                                      "mode": "chose"
+                                    }
+                                  },
+                                  "parameters": {
+                                    "__IMTCONN__": null
+                                  }
+                                },
+                                "parameters": [
+                                  {
+                                    "name": "__IMTCONN__",
+                                    "type": "account:google",
+                                    "label": "Connection",
+                                    "required": true
+                                  }
+                                ],
+                                "expect": [
+                                  {
+                                    "name": "calendar",
+                                    "type": "select",
+                                    "label": "Calendar ID",
+                                    "required": true
+                                  },
+                                  {
+                                    "name": "timeMin",
+                                    "time": true,
+                                    "type": "date",
+                                    "label": "Start Date"
+                                  },
+                                  {
+                                    "name": "timeMax",
+                                    "time": true,
+                                    "type": "date",
+                                    "label": "End Date"
+                                  },
+                                  {
+                                    "name": "updatedMin",
+                                    "time": true,
+                                    "type": "date",
+                                    "label": "Updated from"
+                                  },
+                                  {
+                                    "name": "singleEvents",
+                                    "type": "boolean",
+                                    "label": "Single Events",
+                                    "required": true
+                                  },
+                                  {
+                                    "name": "q",
+                                    "type": "text",
+                                    "label": "Query"
+                                  },
+                                  {
+                                    "name": "eventTypes",
+                                    "type": "select",
+                                    "label": "Event Types",
+                                    "multiple": true,
+                                    "validate": {
+                                      "enum": [
+                                        "default",
+                                        "fromGmail",
+                                        "focusTime",
+                                        "outOfOffice",
+                                        "workingLocation"
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "name": "orderBy",
+                                    "type": "select",
+                                    "label": "Order By",
+                                    "validate": {
+                                      "enum": [
+                                        "startTime",
+                                        "updated"
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "name": "limit",
+                                    "type": "uinteger",
+                                    "label": "Limit"
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "id": 31,
+                              "module": "builtin:BasicAggregator",
+                              "version": 1,
+                              "parameters": {
+                                "feeder": 28
+                              },
+                              "filter": {
+                                "name": "Other real reservations",
+                                "conditions": [
+                                  [
+                                    {
+                                      "a": "{{28.id}}",
+                                      "o": "exist"
+                                    },
+                                    {
+                                      "a": "{{28.id}}",
+                                      "b": "{{25.id}}",
+                                      "o": "text:notequal"
+                                    }
+                                  ]
+                                ]
+                              },
+                              "mapper": {
+                                "id": "{{28.id}}"
+                              },
+                              "metadata": {
+                                "designer": {
+                                  "x": 2600,
+                                  "y": 150
+                                },
+                                "setupValidation": {
+                                  "result": {
+                                    "valid": true,
+                                    "fields": []
+                                  },
+                                  "version": 1,
+                                  "configuration": null
+                                },
+                                "restore": {
+                                  "extra": {
+                                    "feeder": {
+                                      "label": "Google Calendar - Search Events [8]"
+                                    },
+                                    "target": {
+                                      "label": "Custom"
+                                    }
+                                  }
+                                },
+                                "advanced": true
+                              }
+                            },
+                            {
+                              "id": 32,
+                              "module": "builtin:BasicRouter",
+                              "version": 1,
+                              "parameters": {
+                                "else": 1
+                              },
+                              "mapper": null,
+                              "metadata": {
+                                "designer": {
+                                  "x": 2900,
+                                  "y": 150
+                                }
+                              },
+                              "routes": [
+                                {
+                                  "flow": [
+                                    {
+                                      "id": 33,
+                                      "module": "google-calendar:updateAnEvent",
+                                      "version": 5,
+                                      "parameters": {
+                                        "__IMTCONN__": null
+                                      },
+                                      "filter": {
+                                        "name": "Capacity + opening hours (Tue-Fri / Sat / Sun)",
+                                        "conditions": [
+                                          [
+                                            {
+                                              "a": "{{length(31.array)}}",
+                                              "o": "number:less",
+                                              "b": "15"
+                                            },
+                                            {
+                                              "a": "{{1.newGuests}}",
+                                              "o": "number:greaterorequal",
+                                              "b": "1"
+                                            },
+                                            {
+                                              "a": "{{1.newGuests}}",
+                                              "o": "number:lessorequal",
+                                              "b": "4"
+                                            },
+                                            {
+                                              "a": "{{parseDate(1.newDate + 1.newTime; \"YYYY-MM-DDHH:mm\"; \"Europe/Zurich\")}}",
+                                              "o": "date:greater",
+                                              "b": "{{now}}"
+                                            },
+                                            {
+                                              "a": "{{length(1.newTime)}}",
+                                              "o": "number:equal",
+                                              "b": "5"
+                                            },
+                                            {
+                                              "a": "{{formatDate(parseDate(1.newDate; \"YYYY-MM-DD\"; \"UTC\"); \"E\"; \"UTC\")}}",
+                                              "o": "number:greaterorequal",
+                                              "b": "2"
+                                            },
+                                            {
+                                              "a": "{{formatDate(parseDate(1.newDate; \"YYYY-MM-DD\"; \"UTC\"); \"E\"; \"UTC\")}}",
+                                              "o": "number:lessorequal",
+                                              "b": "5"
+                                            },
+                                            {
+                                              "a": "|11:30|12:00|12:30|17:00|17:30|18:00|18:30|19:00|19:30|20:00|20:30|",
+                                              "o": "text:contain",
+                                              "b": "{{1.newTime}}"
+                                            }
+                                          ],
+                                          [
+                                            {
+                                              "a": "{{length(31.array)}}",
+                                              "o": "number:less",
+                                              "b": "15"
+                                            },
+                                            {
+                                              "a": "{{1.newGuests}}",
+                                              "o": "number:greaterorequal",
+                                              "b": "1"
+                                            },
+                                            {
+                                              "a": "{{1.newGuests}}",
+                                              "o": "number:lessorequal",
+                                              "b": "4"
+                                            },
+                                            {
+                                              "a": "{{parseDate(1.newDate + 1.newTime; \"YYYY-MM-DDHH:mm\"; \"Europe/Zurich\")}}",
+                                              "o": "date:greater",
+                                              "b": "{{now}}"
+                                            },
+                                            {
+                                              "a": "{{length(1.newTime)}}",
+                                              "o": "number:equal",
+                                              "b": "5"
+                                            },
+                                            {
+                                              "a": "{{formatDate(parseDate(1.newDate; \"YYYY-MM-DD\"; \"UTC\"); \"E\"; \"UTC\")}}",
+                                              "o": "number:equal",
+                                              "b": "6"
+                                            },
+                                            {
+                                              "a": "|17:00|17:30|18:00|18:30|19:00|19:30|20:00|20:30|",
+                                              "o": "text:contain",
+                                              "b": "{{1.newTime}}"
+                                            }
+                                          ],
+                                          [
+                                            {
+                                              "a": "{{length(31.array)}}",
+                                              "o": "number:less",
+                                              "b": "15"
+                                            },
+                                            {
+                                              "a": "{{1.newGuests}}",
+                                              "o": "number:greaterorequal",
+                                              "b": "1"
+                                            },
+                                            {
+                                              "a": "{{1.newGuests}}",
+                                              "o": "number:lessorequal",
+                                              "b": "4"
+                                            },
+                                            {
+                                              "a": "{{parseDate(1.newDate + 1.newTime; \"YYYY-MM-DDHH:mm\"; \"Europe/Zurich\")}}",
+                                              "o": "date:greater",
+                                              "b": "{{now}}"
+                                            },
+                                            {
+                                              "a": "{{length(1.newTime)}}",
+                                              "o": "number:equal",
+                                              "b": "5"
+                                            },
+                                            {
+                                              "a": "{{formatDate(parseDate(1.newDate; \"YYYY-MM-DD\"; \"UTC\"); \"E\"; \"UTC\")}}",
+                                              "o": "number:equal",
+                                              "b": "7"
+                                            },
+                                            {
+                                              "a": "|17:00|17:30|18:00|18:30|19:00|19:30|",
+                                              "o": "text:contain",
+                                              "b": "{{1.newTime}}"
+                                            }
+                                          ]
+                                        ]
+                                      },
+                                      "mapper": {
+                                        "event": "{{25.id}}",
+                                        "start": "{{formatDate(parseDate(1.newDate + 1.newTime; \"YYYY-MM-DDHH:mm\"; \"Europe/Zurich\"); \"YYYY-MM-DDTHH:mm:ssZ\"; \"Europe/Zurich\")}}",
+                                        "append": false,
+                                        "summary": "{{replace(25.summary; \"/-[0-9]+ guests$/\"; \" -\" + 1.newGuests + \" guests\")}}",
+                                        "calendar": "SELECT_DEMO_CALENDAR",
+                                        "duration": "01:30",
+                                        "allDayEvent": false,
+                                        "description": "{{25.description}}",
+                                        "guestPermissions": {}
+                                      },
+                                      "metadata": {
+                                        "designer": {
+                                          "x": 3200,
+                                          "y": 0
+                                        },
+                                        "setupValidation": {
+                                          "result": {
+                                            "valid": true,
+                                            "fields": []
+                                          },
+                                          "version": 1,
+                                          "configuration": null
+                                        },
+                                        "restore": {
+                                          "expect": {
+                                            "event": {
+                                              "mode": "edit"
+                                            },
+                                            "colorId": {
+                                              "mode": "chose"
+                                            },
+                                            "calendar": {
+                                              "mode": "chose",
+                                              "label": "Potala Reservation Demo"
+                                            },
+                                            "attendees": {
+                                              "mode": "chose"
+                                            },
+                                            "overrides": {
+                                              "mode": "chose"
+                                            },
+                                            "chatStatus": {
+                                              "mode": "chose",
+                                              "label": "Empty"
+                                            },
+                                            "recurrence": {
+                                              "mode": "chose"
+                                            },
+                                            "visibility": {
+                                              "mode": "chose",
+                                              "label": "Empty"
+                                            },
+                                            "allDayEvent": {
+                                              "mode": "chose"
+                                            },
+                                            "attachments": {
+                                              "mode": "chose"
+                                            },
+                                            "sendUpdates": {
+                                              "mode": "chose",
+                                              "label": "Empty"
+                                            },
+                                            "transparency": {
+                                              "mode": "chose",
+                                              "label": "Empty"
+                                            },
+                                            "autoDeclineMode": {
+                                              "mode": "chose",
+                                              "label": "Empty"
+                                            }
+                                          },
+                                          "parameters": {
+                                            "__IMTCONN__": null
+                                          }
+                                        },
+                                        "parameters": [
+                                          {
+                                            "name": "__IMTCONN__",
+                                            "type": "account:google",
+                                            "label": "Connection",
+                                            "required": true
+                                          }
+                                        ],
+                                        "expect": [
+                                          {
+                                            "mode": "edit",
+                                            "name": "calendar",
+                                            "type": "select",
+                                            "label": "Calendar ID",
+                                            "required": true
+                                          },
+                                          {
+                                            "name": "event",
+                                            "type": "select",
+                                            "label": "Event ID",
+                                            "required": true
+                                          },
+                                          {
+                                            "name": "summary",
+                                            "type": "text",
+                                            "label": "Event Name"
+                                          },
+                                          {
+                                            "name": "start",
+                                            "time": true,
+                                            "type": "date",
+                                            "label": "Start Date"
+                                          },
+                                          {
+                                            "name": "end",
+                                            "time": true,
+                                            "type": "date",
+                                            "label": "End Date"
+                                          },
+                                          {
+                                            "name": "duration",
+                                            "type": "time",
+                                            "label": "Duration"
+                                          },
+                                          {
+                                            "name": "allDayEvent",
+                                            "type": "boolean",
+                                            "label": "All Day Event",
+                                            "required": true
+                                          },
+                                          {
+                                            "name": "autoDeclineMode",
+                                            "type": "select",
+                                            "label": "Auto Decline Mode",
+                                            "validate": {
+                                              "enum": [
+                                                "declineNone",
+                                                "declineOnlyNewConflictingInvitations",
+                                                "declineAllConflictingInvitations"
+                                              ]
+                                            }
+                                          },
+                                          {
+                                            "name": "declineMessage",
+                                            "type": "text",
+                                            "label": "Decline Message"
+                                          },
+                                          {
+                                            "name": "chatStatus",
+                                            "type": "select",
+                                            "label": "Chat Status",
+                                            "validate": {
+                                              "enum": [
+                                                "available",
+                                                "doNotDisturb"
+                                              ]
+                                            }
+                                          },
+                                          {
+                                            "name": "colorId",
+                                            "type": "select",
+                                            "label": "Color"
+                                          },
+                                          {
+                                            "name": "description",
+                                            "type": "text",
+                                            "label": "Description"
+                                          },
+                                          {
+                                            "name": "location",
+                                            "type": "text",
+                                            "label": "Location"
+                                          },
+                                          {
+                                            "name": "useDefault",
+                                            "type": "boolean",
+                                            "label": "Use the default reminder settings for this event"
+                                          },
+                                          {
+                                            "name": "overrides",
+                                            "spec": [
+                                              {
+                                                "name": "method",
+                                                "type": "select",
+                                                "label": "Method",
+                                                "options": [
+                                                  {
+                                                    "label": "Email",
+                                                    "value": "email"
+                                                  },
+                                                  {
+                                                    "label": "Pop-up",
+                                                    "value": "popup"
+                                                  }
+                                                ],
+                                                "required": true
+                                              },
+                                              {
+                                                "name": "minutes",
+                                                "type": "uinteger",
+                                                "label": "Minutes",
+                                                "required": true,
+                                                "validate": {
+                                                  "max": 40320
+                                                }
+                                              }
+                                            ],
+                                            "type": "array",
+                                            "label": "Reminders",
+                                            "validate": {
+                                              "maxItems": 5
+                                            }
+                                          },
+                                          {
+                                            "name": "attendees",
+                                            "spec": [
+                                              {
+                                                "name": "displayName",
+                                                "type": "text",
+                                                "label": "Name"
+                                              },
+                                              {
+                                                "name": "email",
+                                                "type": "email",
+                                                "label": "Email",
+                                                "required": true
+                                              }
+                                            ],
+                                            "type": "array",
+                                            "label": "Attendees"
+                                          },
+                                          {
+                                            "name": "append",
+                                            "type": "boolean",
+                                            "label": "Append the Attendees",
+                                            "required": true
+                                          },
+                                          {
+                                            "name": "transparency",
+                                            "type": "select",
+                                            "label": "Show me as",
+                                            "validate": {
+                                              "enum": [
+                                                "opaque",
+                                                "transparent"
+                                              ]
+                                            }
+                                          },
+                                          {
+                                            "name": "visibility",
+                                            "type": "select",
+                                            "label": "Visibility",
+                                            "validate": {
+                                              "enum": [
+                                                "default",
+                                                "public",
+                                                "private"
+                                              ]
+                                            }
+                                          },
+                                          {
+                                            "name": "sendUpdates",
+                                            "type": "select",
+                                            "label": "Send notifications about the event creation",
+                                            "validate": {
+                                              "enum": [
+                                                "all",
+                                                "externalOnly",
+                                                "none"
+                                              ]
+                                            }
+                                          },
+                                          {
+                                            "name": "guestPermissions",
+                                            "spec": [
+                                              {
+                                                "name": "guestsCanModify",
+                                                "type": "boolean",
+                                                "label": "Modify event"
+                                              },
+                                              {
+                                                "name": "guestsCanInviteOthers",
+                                                "type": "boolean",
+                                                "label": "Invite others"
+                                              },
+                                              {
+                                                "name": "guestsCanSeeOtherGuests",
+                                                "type": "boolean",
+                                                "label": "See guest list"
+                                              }
+                                            ],
+                                            "type": "collection",
+                                            "label": "Guest Permissions"
+                                          },
+                                          {
+                                            "name": "recurrence",
+                                            "spec": {
+                                              "name": "value",
+                                              "type": "text",
+                                              "label": "Value"
+                                            },
+                                            "type": "array",
+                                            "label": "Recurrence"
+                                          },
+                                          {
+                                            "name": "attachments",
+                                            "spec": [
+                                              {
+                                                "name": "fileUrl",
+                                                "type": "url",
+                                                "label": "File URL",
+                                                "required": true
+                                              }
+                                            ],
+                                            "type": "array",
+                                            "label": "Attachments"
+                                          }
+                                        ],
+                                        "advanced": true
+                                      }
+                                    },
+                                    {
+                                      "id": 37,
+                                      "module": "gateway:WebhookRespond",
+                                      "version": 1,
+                                      "parameters": {},
+                                      "mapper": {
+                                        "body": "{\"success\":true}",
+                                        "status": "200",
+                                        "headers": []
+                                      },
+                                      "metadata": {
+                                        "designer": {
+                                          "x": 3500,
+                                          "y": 0
+                                        },
+                                        "setupValidation": {
+                                          "result": {
+                                            "valid": true,
+                                            "fields": []
+                                          },
+                                          "version": 1,
+                                          "configuration": null
+                                        },
+                                        "restore": {
+                                          "expect": {
+                                            "headers": {
+                                              "mode": "chose"
+                                            }
+                                          }
+                                        },
+                                        "expect": [
+                                          {
+                                            "name": "status",
+                                            "type": "uinteger",
+                                            "label": "Status",
+                                            "required": true,
+                                            "validate": {
+                                              "min": 100
+                                            }
+                                          },
+                                          {
+                                            "name": "body",
+                                            "type": "any",
+                                            "label": "Body"
+                                          },
+                                          {
+                                            "name": "headers",
+                                            "spec": [
+                                              {
+                                                "name": "key",
+                                                "type": "text",
+                                                "label": "Key",
+                                                "required": true,
+                                                "validate": {
+                                                  "max": 256
+                                                }
+                                              },
+                                              {
+                                                "name": "value",
+                                                "type": "text",
+                                                "label": "Value",
+                                                "required": true,
+                                                "validate": {
+                                                  "max": 4096
+                                                }
+                                              }
+                                            ],
+                                            "type": "array",
+                                            "label": "Custom headers",
+                                            "validate": {
+                                              "maxItems": 16
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "flow": [
+                                    {
+                                      "id": 34,
+                                      "module": "gateway:WebhookRespond",
+                                      "version": 1,
+                                      "parameters": {},
+                                      "filter": {
+                                        "name": "New slot unavailable",
+                                        "conditions": []
+                                      },
+                                      "mapper": {
+                                        "body": "{\"success\":false,\"reason\":\"slot_unavailable\"}",
+                                        "status": "200",
+                                        "headers": []
+                                      },
+                                      "metadata": {
+                                        "designer": {
+                                          "x": 3200,
+                                          "y": 300
+                                        },
+                                        "setupValidation": {
+                                          "result": {
+                                            "valid": true,
+                                            "fields": []
+                                          },
+                                          "version": 1,
+                                          "configuration": null
+                                        },
+                                        "restore": {
+                                          "expect": {
+                                            "headers": {
+                                              "mode": "chose"
+                                            }
+                                          }
+                                        },
+                                        "expect": [
+                                          {
+                                            "name": "status",
+                                            "type": "uinteger",
+                                            "label": "Status",
+                                            "required": true,
+                                            "validate": {
+                                              "min": 100
+                                            }
+                                          },
+                                          {
+                                            "name": "body",
+                                            "type": "any",
+                                            "label": "Body"
+                                          },
+                                          {
+                                            "name": "headers",
+                                            "spec": [
+                                              {
+                                                "name": "key",
+                                                "type": "text",
+                                                "label": "Key",
+                                                "required": true,
+                                                "validate": {
+                                                  "max": 256
+                                                }
+                                              },
+                                              {
+                                                "name": "value",
+                                                "type": "text",
+                                                "label": "Value",
+                                                "required": true,
+                                                "validate": {
+                                                  "max": 4096
+                                                }
+                                              }
+                                            ],
+                                            "type": "array",
+                                            "label": "Custom headers",
+                                            "validate": {
+                                              "maxItems": 16
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "flow": [
+                            {
+                              "id": 30,
+                              "module": "gateway:WebhookRespond",
+                              "version": 1,
+                              "parameters": {},
+                              "filter": {
+                                "name": "Reference or phone mismatch.",
+                                "conditions": []
+                              },
+                              "mapper": {
+                                "body": "{\"success\":false,\"reason\":\"reservation_not_found_or_unverified\"}",
+                                "status": "200",
+                                "headers": []
+                              },
+                              "metadata": {
+                                "designer": {
+                                  "x": 2300,
+                                  "y": 750
+                                },
+                                "setupValidation": {
+                                  "result": {
+                                    "valid": true,
+                                    "fields": []
+                                  },
+                                  "version": 1,
+                                  "configuration": "16457df78adc844"
+                                },
+                                "restore": {
+                                  "expect": {
+                                    "headers": {
+                                      "mode": "chose"
+                                    }
+                                  }
+                                },
+                                "expect": [
+                                  {
+                                    "name": "status",
+                                    "type": "uinteger",
+                                    "label": "Status",
+                                    "required": true,
+                                    "validate": {
+                                      "min": 100
+                                    }
+                                  },
+                                  {
+                                    "name": "body",
+                                    "type": "any",
+                                    "label": "Body"
+                                  },
+                                  {
+                                    "name": "headers",
+                                    "spec": [
+                                      {
+                                        "name": "key",
+                                        "type": "text",
+                                        "label": "Key",
+                                        "required": true,
+                                        "validate": {
+                                          "max": 256
+                                        }
+                                      },
+                                      {
+                                        "name": "value",
+                                        "type": "text",
+                                        "label": "Value",
+                                        "required": true,
+                                        "validate": {
+                                          "max": 4096
+                                        }
+                                      }
+                                    ],
+                                    "type": "array",
+                                    "label": "Custom headers",
+                                    "validate": {
+                                      "maxItems": 16
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "flow": [
+                    {
+                      "id": 26,
+                      "module": "gateway:WebhookRespond",
+                      "version": 1,
+                      "parameters": {},
+                      "filter": {
+                        "name": "Not found or unverified",
+                        "conditions": []
+                      },
+                      "mapper": {
+                        "body": "{\"success\":false,\"reason\":\"reservation_not_found_or_unverified\"}",
+                        "status": "200",
+                        "headers": []
+                      },
+                      "metadata": {
+                        "designer": {
+                          "x": 1700,
+                          "y": 750
+                        },
+                        "setupValidation": {
+                          "result": {
+                            "valid": true,
+                            "fields": []
+                          },
+                          "version": 1,
+                          "configuration": "16457df78adc844"
+                        },
+                        "restore": {
+                          "expect": {
+                            "headers": {
+                              "mode": "chose"
+                            }
+                          }
+                        },
+                        "expect": [
+                          {
+                            "name": "status",
+                            "type": "uinteger",
+                            "label": "Status",
+                            "required": true,
+                            "validate": {
+                              "min": 100
+                            }
+                          },
+                          {
+                            "name": "body",
+                            "type": "any",
+                            "label": "Body"
+                          },
+                          {
+                            "name": "headers",
+                            "spec": [
+                              {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key",
+                                "required": true,
+                                "validate": {
+                                  "max": 256
+                                }
+                              },
+                              {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value",
+                                "required": true,
+                                "validate": {
+                                  "max": 4096
+                                }
+                              }
+                            ],
+                            "type": "array",
+                            "label": "Custom headers",
+                            "validate": {
+                              "maxItems": 16
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "instant": true,
+    "version": 1,
+    "scenario": {
+      "roundtrips": 1,
+      "maxErrors": 3,
+      "autoCommit": true,
+      "autoCommitTriggerLast": true,
+      "sequential": false,
+      "slots": null,
+      "confidential": false,
+      "dataloss": false,
+      "dlq": false,
+      "freshVariables": false
+    },
+    "designer": {
+      "orphans": []
+    },
+    "zone": "eu1.make.com",
+    "notes": []
+  }
+}
+
