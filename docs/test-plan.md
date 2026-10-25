@@ -1,25 +1,18 @@
-# Test record and final checks
+# Test record and low-credit checks
 
-## Already observed in the demo
+## Verified through the session
 
-| Case | Observed result |
+| Case | Observed |
 | --- | --- |
-| Saturday lunch | Availability rejected |
-| Saturday dinner | Availability accepted |
-| Sunday 18:00 | Availability accepted |
-| Sunday 20:00 | Availability rejected |
-| Monday | Availability rejected |
-| Tuesday lunch | Availability accepted; booking created matching 90-minute calendar event |
-| German guest count | Recognized after changing the transcriber to Deepgram Nova 3 German |
+| Availability opening times | Saturday lunch, Sunday late dinner, and Monday rejected; permitted slots accepted |
+| Combined Make booking | Successful demo calendar entry with name, phone, 90-minute duration, and short `bookingRef` |
+| Combined Make change | Same reference and phone updated the existing event to another open slot |
+| Combined Make rejection | Saturday lunch change and Monday booking returned `slot_unavailable` |
+| Vapi direct tool tests | Book and change rejected invalid slots with JSON `success:false` |
+| Short voice call | German first message, English switch, recognized change intent with no reference, no accidental booking/tool call |
 
-These are conversation-session observations, not automated regression tests.
+**Remaining:** one complete voice change with a spoken reference and phone after the latest assistant prompt. Separate backend tests do not prove the full voice path. Notifications have not been configured or tested. Avoid extra paid calls while credit is low.
 
-## Remaining low-credit final test
+## One final end-to-end check when ready
 
-1. Enter the public Vapi key and assistant ID on the public page. Saving them must **not** start a call.
-2. Choose a fresh future open slot with no existing demo event. Start one web conversation. Confirm date, time, guests, and a fictional name before booking.
-3. Verify the tool says success and exactly one 90-minute event appears in the demo calendar with the matching details.
-4. Record any unusually long pauses and inspect that call in Vapi Logs → Calls to distinguish speech detection, model, and tool delay.
-5. If credit permits, test one closed-day or out-of-hours request; ensure no event is created. This can also be checked through Make without using Vapi credit.
-
-Avoid repeated calls to an already booked demo slot unless testing rejection deliberately. Do not perform real customer reservations with this setup.
+Use one existing fictional demo event with a recorded reference and saved phone. Choose a fresh future open slot and request a change by voice through the web page. Confirm the assistant uses only the change tool, says success only after tool success, and that exactly the original calendar event moved with the same reference and phone. Inspect Vapi call log and Make history if the outcome differs; avoid repeating the call blindly. Do not treat a demonstration as a real restaurant booking.
