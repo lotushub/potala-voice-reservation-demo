@@ -33,13 +33,14 @@
 
 1. Open the [web demo](https://potala-voice-demo-2026.ochrescout3.chatgpt.site).
 2. In its setup panel, enter the **restricted public** Vapi key and assistant ID for the Potala assistant. Never enter a private API key.
-3. Allow microphone access and select **Start Conversation**. Try a future permitted date with fictional details.
+3. Allow microphone access and select **Gespräch starten**. Try a future permitted date with fictional details.
 
 To rebuild or switch Vapi organizations, use the [setup guide](docs/setup.md). The source for the page is in [`web/`](web/); sanitized Make reference exports are in [`make/`](make/). They require reconnection and verification after import.
 
 ## Documentation
 
 - [Project overview](docs/project-overview.md) — a short explanation for someone new to Vapi and Make.
+- [Hosting](docs/deployment.md) — current public page and optional Render Static Site setup.
 - [Detailed workflow](docs/workflow.md) — booking rules, change flow, and limitations.
 - [Setup and new Vapi account](docs/setup.md) — the three tools, web key, and reconnection steps.
 - [Confirmations](docs/confirmations.md) — how the booking reference works and proposed email/SMS delivery.
