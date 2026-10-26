@@ -1,19 +1,26 @@
 # Potala reservation assistant checklist
 
-Updated 25 October 2026. This is a demo calendar, not the restaurant's live reservation system.
+Updated 26 October 2026. This is a demo calendar, not the restaurant's live reservation system.
 
 ## Working and observed
 
 - [x] Availability Make scenario applies future start, Zurich time, weekday start-time rules, and demo 15-table capacity.
 - [x] Combined Book or Change Make scenario replaces separate active booking/change scenarios under the two-active-scenario constraint.
-- [x] Combined scenario: `action=book` creates a 90-minute event with name, guests, optional phone, and a short `bookingRef`; `action=change` verifies reference+saved phone and updates the same event.
+- [x] Combined scenario: `action=book` creates a 90-minute event with name, guests, required phone, and a short `bookingRef`; `action=change` verifies reference+saved phone and updates the same event.
 - [x] Confirm combined Make actions with fictional data; reject Monday booking and Saturday lunch change.
 - [x] Publish Vapi assistant with German first message, English switch, multilingual transcription, and three tools for availability, booking, change.
 - [x] Short voice test: change intent without a reference was handled in English and did not call booking/availability tools.
 - [x] Public Start Conversation page built and linked from README.
 
+- [x] Require phone in Vapi booking tool and assistant prompt; require nonblank phone in Make's Free slot filter.
+- [x] Verify a missing-phone request returns `{"success":false,"reason":"phone_required"}`.
+- [x] Verify one Make-only booking saved a fictional phone and an 8-character, hyphen-free reference in a 90-minute event on 4 November 2026.
+- [x] Add automatic Zurich date context, year inference with confirmation, and concise-response instructions to the assistant prompt. Runtime year inference still needs verification after publication.
+
 ## Remaining for the demo
 
+- [ ] Check the live change route accepts both 8- and 16-character references: the older saved blueprint enforces 16. Then re-export/sanitize the latest scenario. No change with a new 8-character reference has been verified.
+- [ ] Add phone-only lookup if desired; reference + saved phone are still required today.
 - [ ] Verify one complete **spoken change** using a known fictional reference and phone, with one new open slot; then check the same Calendar event moved. Keep Vapi/Make credit use low.
 - [ ] Add **optional email** confirmation or **opt-in SMS** after successful booking and change; see [confirmations](confirmations.md). No notification delivery is live yet.
 - [x] Add a sanitized combined Make blueprint reference in `make/`. Reconnect and verify it after import; it is not an automatically restored live scenario.
