@@ -27,6 +27,8 @@
 | “Please book it.” | After the guest confirms, Make rechecks and creates a 90-minute event. Vapi reads the returned booking reference. |
 | “I need to change my booking.” | Make matches the booking reference and saved phone, checks the new slot, and updates the same event. |
 
+**Updated 26 October 2026:** New bookings require a confirmed phone number and receive an 8-character reference without hyphens. Make-only tests verified missing-phone rejection and a calendar booking with the fictional phone and reference saved. Phone-only lookup and automatic email/SMS remain unimplemented. New-reference change compatibility still needs checking; see the [checklist](docs/checklist.md).
+
 **Current scope:** one indoor table for 1–4 guests; 15 demo tables; Monday closed; Zurich time. [Exact permitted start times](docs/workflow.md).
 
 ## Quick start
