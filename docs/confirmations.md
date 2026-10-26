@@ -2,7 +2,7 @@
 
 ## What works today
 
-When the combined Make booking scenario succeeds, it returns a short `bookingRef` and stores that reference in the demo event. The assistant is instructed to spell it and ask the caller to keep it. The change flow requires that exact reference **and the same saved phone number**. There is currently **no SMS or email delivery**. A caller who forgets the reference needs staff help; the assistant should not claim it can look up a booking by name alone.
+New bookings require a confirmed phone number. When the combined Make booking scenario succeeds, it returns an 8-character, hyphen-free `bookingRef` and stores that reference in the demo event. The assistant is instructed to spell it and ask the caller to keep it. The change flow requires that exact reference **and the same saved phone number**. There is currently **no SMS or email delivery**. A caller who forgets the reference needs staff help; the assistant should not claim it can look up a booking by name alone.
 
 Example after `{"success":true,"bookingRef":"..."}`:
 
