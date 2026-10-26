@@ -5,7 +5,11 @@
 - `Potala Demo – Calendar – Check Indoor Availability` handles availability.
 - `Potala Demo – Book or Change Indoor Reservation` handles both `action=book` and `action=change`. The scenario branches by action, enforces Zurich-time rules and 15-table capacity, and uses the dedicated demo calendar.
 - Preserve the current Make webhook URLs privately. The sanitized combined reference is `make/combined-book-change.reference.blueprint.json`; older availability and booking references are also present. Reconnect the webhook, Google account, and calendar after import and verify the filters; these files do not carry live credentials or connections.
-- The book response should expose `success` and `bookingRef`; the event title/description contains name, guest count, optional phone, and reference. The change response should expose `success` or a reason. Do not confuse a webhook's `Accepted` page with a completed JSON result.
+- The book response should expose `success` and `bookingRef`; the event title/description contains name, guest count, required phone, and reference. The change response should expose `success` or a reason. Do not confuse a webhook's `Accepted` page with a completed JSON result.
+
+### Changes made on 26 October
+
+The current live booking flow requires phone; a missing phone returns `phone_required`, and new references use `substring(uuid; 0; 8)`. These edits are verified in Make but are **not included in the older blueprint export**. Re-export and sanitize after checking the live change route's reference-length condition: it must support both new 8-character and legacy 16-character references. Do not overwrite the working scenario with this older export.
 
 ## 2. Vapi assistant and tools
 
@@ -18,7 +22,7 @@ Use the text in [vapi-system-prompt.md](vapi-system-prompt.md) as a reference an
 | Tool | Endpoint and fields | Result |
 | --- | --- | --- |
 | `check_potala_demo_availability` | Availability Make webhook; `date`, `time`, `guests` strings | `available` boolean |
-| `book_potala_demo_indoor_table` | Combined Make webhook with `action=book`; `date`, `time`, `guests`, `name` required strings; `phone` optional string | `success`, `bookingRef` on success |
+| `book_potala_demo_indoor_table` | Combined Make webhook with `action=book`; `date`, `time`, `guests`, `name` required strings; `phone` required string | `success`, `bookingRef` on success |
 | `change_potala_demo_indoor_reservation` | Same combined webhook with `action=change`; `bookingRef`, `phone`, `newDate`, `newTime`, `newGuests` required strings | `success` or reason |
 
 Keep complete webhook addresses and account tokens out of GitHub. A change should use the **change tool only** after explicit confirmation.
