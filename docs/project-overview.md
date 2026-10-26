@@ -6,7 +6,7 @@
 
 1. Vapi asks for guests (1–4), date, and time, then calls the **availability tool**.
 2. Make checks opening times, future time, and existing events in the **demo** calendar; it sends the result to Vapi.
-3. If free, Vapi collects a name and optional phone, repeats the details, and asks for confirmation.
+3. If free, Vapi collects a name and required phone, repeats the details, and asks for confirmation.
 4. After a clear yes, Vapi calls the **booking tool**. Make checks again and creates one 90-minute calendar event.
 5. Make returns `success:true` and a short `bookingRef`. Vapi reads the reference aloud only after success.
 
