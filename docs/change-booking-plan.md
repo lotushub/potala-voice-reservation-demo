@@ -2,6 +2,8 @@
 
 **Implemented in Make:** the combined Book or Change scenario accepts `action=change`. The Vapi assistant has a separate change tool and prompt. The backend was tested with a fictional booking reference and saved phone: it moved the **same** calendar event to a new slot while preserving the reference and phone.
 
+**26 October update:** New bookings now receive 8-character references without hyphens. The older exported change route requires length 16; check the live filter for 8/16 compatibility before testing a change. Phone-only lookup is not implemented.
+
 ## Caller path
 
 1. The assistant asks for booking reference and phone saved with the original booking, then the new date, start time, and guest count (1–4).
@@ -13,4 +15,4 @@
 
 ## Known limits
 
-The caller currently gets the booking reference spoken on the successful call only. Automated email/SMS is [planned](confirmations.md). A booking without a saved phone cannot be changed automatically. A spoken matching phone does not prove ownership, and simultaneous callers could exceed capacity. Cancellation and staff recovery are not implemented. Keep this in the demo calendar until those issues are addressed.
+The caller currently gets the booking reference spoken on the successful call only. Automated email/SMS is [planned](confirmations.md). New bookings require a confirmed phone. Legacy bookings without a saved phone cannot be changed automatically. A spoken matching phone does not prove ownership, and simultaneous callers could exceed capacity. Cancellation and staff recovery are not implemented. Keep this in the demo calendar until those issues are addressed.
