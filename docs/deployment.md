@@ -1,33 +1,39 @@
-# Hosting the Potala demo page
+# Hosting the Potala voice demo
 
-The redesigned page is already published at <https://potala-voice-demo-2026.ochrescout3.chatgpt.site>. It is a static Vite page; Vapi handles the voice call, and Make handles calendar requests. The page does not need its own backend server.
+## Live sites
 
-## Existing ChatGPT Sites deployment
+- **Render:** <https://booking-voice-agent-1wde.onrender.com/>
+- Existing hosted version: <https://potala-voice-demo-2026.ochrescout3.chatgpt.site>
 
-Use the current public URL for the presentation. ChatGPT Sites hosting is currently included with eligible Plus/Pro plans, although editing consumes Codex usage and Vapi/Make have their own usage and credit limits. The source in `web/` is synchronized with the published page.
+The page is a static Vite frontend. Vapi handles the live voice conversation; Make handles calendar actions. Hosting does not provide Vapi or Make credits.
 
-## Optional separate free host: Render Static Site
+## Deployed Render configuration
 
-Render supports free static sites, subject to its monthly included bandwidth and pipeline usage. If a separate `onrender.com` address is wanted:
+Deployment reached **live** on 27 October 2026. The page, waveform and connection settings were checked without a paid call. Service `booking-voice-agent` uses repository `lotushub/potala-voice-reservation-demo`, branch `main`, with automatic deploys enabled.
 
-1. In Render, choose **New → Static Site**, connect the private GitHub repository `lotushub/potala-voice-reservation-demo`, and choose the `main` branch.
-2. Set **Root Directory** to `web`, **Build Command** to `npm ci && npm run build`, and **Publish Directory** to `dist`.
-3. After Render provides the actual site URL, add that exact origin to the **Allowed Origins** of the restricted Vapi public key. If the key is limited to specific assistants, include the intended Potala assistant.
-4. Open the new site and enter the **public** Vapi key and assistant ID in its setup panel. Check microphone permission. Keep any **private** Vapi key, Make webhook URL, and customer data off the static site.
+| Setting | Live value |
+| --- | --- |
+| Service type | Static Site |
+| Root directory | Repository root (blank) |
+| Build command | `cd web && npm ci && npm run build` |
+| Publish directory | `web/dist` |
 
-The page's setup is stored separately in each browser. A new domain will not inherit values saved on the existing site. Hosting the static page does not include Vapi call credits, Make operations, or SMS costs.
+An equivalent manual setup can set Root Directory to `web`, Build Command to `npm ci && npm run build`, and Publish Directory to `dist`. Do not mix the two path configurations.
 
-Official references: [ChatGPT Sites hosting](https://help.openai.com/en/articles/20001339-creating-and-using-chatgpt-sites), [Render static sites](https://render.com/docs/static-sites), [Vapi public key restrictions](https://docs.vapi.ai/security-and-privacy/api-keys).
+Static hosting is free within Render's included bandwidth/build allowances; check the account's current limits. Documentation-only commits use `[skip render]` to avoid unnecessary builds.
 
-## Live Render deployment (27 October 2026)
+## Enable voice on the new origin
 
-Public URL: <https://booking-voice-agent-1wde.onrender.com/>
+1. In Vapi, allow the exact origin `https://booking-voice-agent-1wde.onrender.com` on the restricted public key, and allow the intended assistant.
+2. On the Render page, select **Demo einrichten**. Save the public key and Assistant ID in that browser. Never enter a private API key.
+3. Use the free local microphone check if needed. Select **Sprachdemo starten** only when ready for a paid call; it starts immediately in a configured browser.
 
-- Service: `booking-voice-agent`, Static Site, `main` branch.
-- Build from repository root: `cd web && npm ci && npm run build`.
-- Publish directory from repository root: `web/dist`.
-- Existing ChatGPT Sites demo remains available.
-- Deployment reached `live`; landing page and connection settings checked without a paid voice call.
-- To enable calls, allow the exact Render origin in the restricted Vapi public key, then use **Demo einrichten** on the Render page to save that public key and the Assistant ID in the visitor's browser.
-- The new origin has separate browser storage. No Vapi credentials are embedded in the repository or Render deployment. Live voice still requires credits and active Make scenarios.
+The waveform has connecting/listening/speaking states driven by Vapi events. Reduced-motion preferences disable its animation. The current live-call speech response has not been re-tested since the visual change.
 
+A new domain or browser does not inherit saved setup values. Each visitor currently needs the owner's restricted public key and assistant ID. The repository and deployment contain no embedded Vapi credentials. A shared link alone does not automatically configure the visitor's voice access.
+
+## Changing Make/Vapi accounts
+
+Follow [account-migration.md](account-migration.md). Keep this Render service and URL. Replace browser settings after creating the new assistant, and point its tools to the new Make webhooks. **No redeployment is required for changing those browser settings.** Retain the same Google Calendar to preserve existing demo reservations.
+
+Official references: [Render static sites](https://render.com/docs/static-sites), [Render deploy behavior](https://render.com/docs/deploys), [Vapi public key restrictions](https://docs.vapi.ai/security-and-privacy/api-keys).
