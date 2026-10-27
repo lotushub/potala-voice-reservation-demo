@@ -18,7 +18,7 @@
 
 For demo changes, provide either a booking reference or the phone saved with the booking. A supplied reference takes priority; Make uses phone only when the reference is empty. It does not automatically retry a wrong reference using the phone. Exactly one search result is required; zero or multiple results are rejected without a calendar update. Phone formatting must match the saved value; automatic normalization is not implemented.
 
-Both lookup paths are tested in Make. The reference query is now trimmed/lowercased and the description comparison ignores letter case; a direct uppercase-reference change passed on 27 October. The latest voice flow still needs an end-to-end check.
+Both lookup paths are tested in Make. The reference query is now trimmed/lowercased and the description comparison ignores letter case; a direct uppercase-reference change passed on 27 October. The complete reference-based voice-change flow passed through Render with published assistant v5 on 27 October: the calendar updated and the assistant confirmed success without a reminder.
 
 ## How Make is organized
 
@@ -35,4 +35,4 @@ Monday is closed. Tuesday–Friday permit lunch and dinner starts; Saturday and 
 
 ## Moving accounts
 
-The public Render URL can stay while Make/Vapi accounts change. Import fresh Make blueprints, reconnect the same Google Calendar, update the new Vapi tools with the new webhook URLs, then replace the public key and Assistant ID in each browser. See [Account migration](account-migration.md). No account migration has been performed yet.
+The public Render URL can stay while Make/Vapi accounts change. Import fresh Make blueprints, reconnect the same Google Calendar, update the new Vapi tools with the new webhook URLs, then replace the public key and Assistant ID in each browser. See [Account migration](account-migration.md). The migration was completed on 27 October 2026: direct Make checks and a complete reference-based voice change passed.

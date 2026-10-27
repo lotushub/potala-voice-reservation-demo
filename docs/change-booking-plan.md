@@ -15,10 +15,14 @@ For demo changes, provide either a booking reference or the phone saved with the
 
 ## Verified
 
-Reference-only change and phone-only change both returned success in Make and showed the expected existing calendar event with its saved description preserved. The final phone-only test event was 5 November 2026, 19:00–20:30 for 3 guests. These were direct webhook tests; the latest either-identifier voice flow is not yet verified end to end.
+Reference-only change and phone-only change both returned success in Make and showed the expected existing calendar event with its saved description preserved. The final phone-only test event was 5 November 2026, 19:00–20:30 for 3 guests. These were direct webhook tests. A later reference-based voice change was also verified end to end through the Render page with published assistant v5; phone-only voice changes were not separately re-tested in the migrated setup.
 
 
 On 27 October, an uppercase reference passed a direct Make test and matched the stored lowercase reference. The user verified the same calendar event moved to Tuesday 1 December 2026, 19:00–20:30, 3 guests, with phone/reference preserved. The previously failed voice request proposed Monday 30 November, which is closed; a successful lookup does not make a closed start valid.
+
+On 27 October 2026, the user verified a complete voice change through the Render page using the migrated Vapi/Make setup: the same demo event moved to 3 November 2026, 18:30–20:00 for 2 guests, with its saved phone and reference preserved. The assistant announced success automatically without a reminder.
+
+Published v5 added the three tool attachments missing from the failed v4 calls. Those earlier calls had no tools supplied to the model and their spoken success claims were not evidence of a calendar update.
 
 ## Limits
 

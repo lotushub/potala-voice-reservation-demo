@@ -31,6 +31,8 @@ Use the text in [vapi-system-prompt.md](vapi-system-prompt.md) as a reference an
 
 Reference lookup has priority if both identifiers are supplied; phone-only queries require the stored format. Zero or multiple matches return failure; selection from multiple bookings is not implemented.
 
+**Verified migration (27 October):** The destination Make scenarios passed direct availability, booking, and uppercase-reference change checks. Published assistant v5 includes all three tool attachments; the earlier failed v4 calls supplied no tools to the model. A subsequent reference-based voice change through Render updated the existing event to 3 November 2026, 18:30–20:00 for 2 guests, and the assistant announced success without a reminder. See [test record](test-plan.md).
+
 Keep complete webhook addresses and account tokens out of GitHub. A change should use the **change tool only** after explicit confirmation.
 
 ## 3. Move to a different Vapi account

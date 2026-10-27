@@ -12,7 +12,7 @@ Updated 27 October 2026. This is a demo calendar, not the restaurant's live rese
 - [x] Short voice test: change intent without a reference was handled in English and did not call booking/availability tools.
 - [x] Public voice page deployed on Render; simplified launch and orange waveform checked without a paid call.
 - [x] Save the live Render URL and build configuration in [deployment.md](deployment.md).
-- [ ] Allow the new Render origin on the restricted Vapi key and configure the presentation browser; the deployment check did not verify these account settings.
+- [x] Configure the test browser with the migrated Vapi public key and assistant ID; a complete voice change through Render succeeded. Review key restrictions and configure any different presentation browser separately.
 
 - [x] Require phone in Vapi booking tool and assistant prompt; require nonblank phone in Make's Free slot filter.
 - [x] Verify a missing-phone request returns `{"success":false,"reason":"phone_required"}`.
@@ -29,11 +29,11 @@ Updated 27 October 2026. This is a demo calendar, not the restaurant's live rese
 - [x] Preserve saved phone/reference using `25.Description` in Update Event.
 - [ ] Export and sanitize the latest live scenario; current reference exports predate these edits.
 - [ ] Add selection/verification for multiple matching bookings if needed; current flow rejects multiple matches.
-- [ ] Verify one complete **spoken change** using either a known fictional reference or unique saved phone, with one new open slot; then check the same Calendar event moved. Keep Vapi/Make credit use low.
+- [x] Verify one complete **spoken change** using a known fictional reference through Render with published assistant v5. On 27 October, the user confirmed the same event moved to 3 November 2026, 18:30–20:00 for 2 guests, with phone/reference preserved; the assistant announced success without a reminder.
 - [ ] Add **optional email** confirmation or **opt-in SMS** after successful booking and change; see [confirmations](confirmations.md). No notification delivery is live yet.
 - [x] Add a sanitized combined Make blueprint reference in `make/`. Reconnect and verify it after import; it is not an automatically restored live scenario.
-- [x] Document migration of both Make and Vapi in [account-migration.md](account-migration.md); migration itself has not been carried out.
-- [ ] Confirm new Vapi organization's balance and recreate three tools and assistant if changing organizations; update the web page's public key and assistant ID in each browser.
+- [x] Complete migration of both Make and Vapi while retaining the demo calendar and Render page; direct availability, booking, uppercase-reference change, and a complete reference-based voice change passed.
+- [x] Recreate the three tools and assistant in the new Vapi account, attach all three tools, publish v5, and update the tested browser's public key and assistant ID. Configure other browsers separately and check remaining credits before presenting.
 - [ ] Review the live Vapi prompt against [prompt reference](vapi-system-prompt.md); track any later UI edits.
 
 ## Before real restaurant use

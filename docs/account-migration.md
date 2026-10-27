@@ -1,6 +1,12 @@
 # Move Make and Vapi accounts
 
-This is a migration guide, not a record of a completed migration. Keep the old setup working until the destination passes verification. The Render page and GitHub repository can remain unchanged.
+The Make and Vapi migration was completed and verified during the 27 October 2026 session. The existing Render page and demo calendar were retained. This guide remains a checklist for future migrations; keep the source setup available until a new destination passes verification.
+
+## Verified migration result
+
+Destination Make passed direct availability, booking, and uppercase-reference change tests. On 27 October 2026, the user verified a complete voice change through the Render page using the migrated Vapi/Make setup: the same demo event moved to 3 November 2026, 18:30–20:00 for 2 guests, with its saved phone and reference preserved. The assistant announced success automatically without a reminder.
+
+The failed v4 calls had no tools available to the model. Published v5 added all three tool attachments, and the subsequent voice change succeeded. Creating tools alone does not attach them to an assistant; confirm they are included in the published version. This verifies the tested reference-based path, not automatic phone fallback or every possible migration case.
 
 ## What stays and what changes
 

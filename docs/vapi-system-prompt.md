@@ -4,7 +4,7 @@ Set this **First Message** in its own Vapi field:
 
 > Guten Tag, Potala Restaurant in Olten. Möchten Sie einen Tisch reservieren oder eine bestehende Testreservierung ändern?
 
-Paste only the following text into **System Prompt**. It is the latest local paste-ready copy used during setup. Compare it with the published Vapi version before changing or republishing; this repository cannot automatically read the live account configuration.
+**Historical prompt reference:** The block below predates the later single-confirmation rewrite used in the successful migrated setup. Do not replace the working published assistant with this older copy. Export the current prompt from Vapi before restoration; this repository cannot automatically read the live account configuration.
 
 ```text
 CURRENT DATE AND DATE HANDLING
@@ -84,4 +84,4 @@ The assistant uses three API Request tools: `check_potala_demo_availability`, `b
 
 ## Current implementation notes (27 October)
 
-This reference records the session's date-context, concise-response, required-phone booking, and either-identifier demo change edits; it is not a fresh API export of the published assistant. New references have 8 hexadecimal characters without hyphens; legacy 16-character references remain accepted. Reference-only and phone-only changes passed direct Make tests. The latest voice flow still needs end-to-end verification. Multiple matches are rejected; no booking-list selection or ownership verification is implemented. Existing sanitized blueprints are older than these edits.
+This reference records the session's date-context, concise-response, required-phone booking, and either-identifier demo change edits; it is not a fresh API export of the published assistant. New references have 8 hexadecimal characters without hyphens; legacy 16-character references remain accepted. Reference-only and phone-only changes passed direct Make tests. The later single-confirmation prompt and published assistant v5 passed a complete reference-based voice change through Render on 27 October; Calendar updated and the assistant confirmed success without a reminder. This historical prompt block is not an export of that tested version. Multiple matches are rejected; no booking-list selection or ownership verification is implemented. Existing sanitized blueprints are older than these edits.

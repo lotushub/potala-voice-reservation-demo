@@ -27,7 +27,7 @@
 | “Please book it.” | After the guest confirms, Make rechecks and creates a 90-minute event. Vapi reads the returned booking reference. |
 | “I need to change my booking.” | Make finds one demo booking using its reference or saved phone, checks the new slot, and updates the same event. |
 
-**Updated 27 October 2026:** The Render Static Site is live with a simplified voice-launch page and an orange animated waveform. New bookings require a phone and return an 8-character reference. A direct Make test verified that an uppercase reference finds the stored lowercase reference and updates the same calendar event. Earlier phone-only changes also passed. The latest full voice flow still needs a final check; email/SMS is not connected.
+**Updated 27 October 2026:** The Render Static Site is live with a simplified voice-launch page and an orange animated waveform. New bookings require a phone and return an 8-character reference. A direct Make test verified that an uppercase reference finds the stored lowercase reference and updates the same calendar event. Earlier phone-only changes also passed. The complete voice-change flow passed through the Render page with published assistant v5: Calendar updated to 3 November 2026, 18:30–20:00 for 2 guests, and the assistant confirmed success without a reminder. Email/SMS is not connected; automatic phone fallback after an incorrect reference remains unimplemented.
 
 **Current scope:** one indoor table for 1–4 guests; 15 demo tables; Monday closed; Zurich time. [Exact permitted start times](docs/workflow.md).
 
