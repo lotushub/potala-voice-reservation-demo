@@ -8,14 +8,17 @@ For demo changes, provide either a booking reference or the phone saved with the
 
 - Vapi change tool: `newDate`, `newTime`, `newGuests` required; `bookingRef` and `phone` individually optional. Assistant must supply at least one identifier and obtain explicit confirmation before calling.
 - Make entry filter accepts reference length 8 or 16, or a phone-only request with reference empty.
-- Search Events 22 selects reference, otherwise phone. The aggregator/route requires exactly one result.
-- A later filter matches the selected identifier in the event description. The phone label must include its space: `Demo contact number: `.
+- Search Events 22 uses `lower(trim(ifempty(1.bookingRef; 1.phone)))`: normalize the selected reference/phone query to lowercase and trim surrounding whitespace. Reference still takes priority. The aggregator/route requires exactly one result.
+- The later description filter matches a nonempty reference with **Contains (case insensitive)**, OR a supplied phone (length > 4) against `Demo contact number: ` plus that phone. Its phone group no longer requires reference to be empty. Preserve the space after each label. This does not add a second search or automatic phone fallback.
 - Capacity check excludes the original event; Update 33 preserves `25.Description`, so omitted inputs do not erase stored contact/reference details.
 - Success is reported only after `success:true`. Failed or ambiguous results do not authorize a change.
 
 ## Verified
 
 Reference-only change and phone-only change both returned success in Make and showed the expected existing calendar event with its saved description preserved. The final phone-only test event was 5 November 2026, 19:00–20:30 for 3 guests. These were direct webhook tests; the latest either-identifier voice flow is not yet verified end to end.
+
+
+On 27 October, an uppercase reference passed a direct Make test and matched the stored lowercase reference. The user verified the same calendar event moved to Tuesday 1 December 2026, 19:00–20:30, 3 guests, with phone/reference preserved. The previously failed voice request proposed Monday 30 November, which is closed; a successful lookup does not make a closed start valid.
 
 ## Limits
 
