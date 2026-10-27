@@ -1,6 +1,6 @@
 # How the Potala reservation demo works
 
-**Vapi speaks with the guest. Make applies the booking rules. Google Calendar stores the practice reservation.** The web page starts a Vapi call in a browser.
+**Vapi speaks with the guest. Make applies the booking rules. Google Calendar stores the practice reservation.** The [public Render page](https://booking-voice-agent-1wde.onrender.com/) starts a Vapi call in a browser. It has a focused **Sprachdemo starten** action and an orange waveform voice window; setup is under **Demo einrichten**.
 
 ## New booking
 
@@ -18,7 +18,7 @@
 
 For demo changes, provide either a booking reference or the phone saved with the booking. A supplied reference takes priority; Make uses phone only when the reference is empty. It does not automatically retry a wrong reference using the phone. Exactly one search result is required; zero or multiple results are rejected without a calendar update. Phone formatting must match the saved value; automatic normalization is not implemented.
 
-Both lookup paths are tested in Make. The latest voice flow still needs an end-to-end check.
+Both lookup paths are tested in Make. The reference query is now trimmed/lowercased and the description comparison ignores letter case; a direct uppercase-reference change passed on 27 October. The latest voice flow still needs an end-to-end check.
 
 ## How Make is organized
 
@@ -32,3 +32,7 @@ Monday is closed. Tuesday–Friday permit lunch and dinner starts; Saturday and 
 **Current limits:** This is a demo, not a real restaurant confirmation. The reference is spoken, but no email or SMS is sent yet. Cancellation, outdoor seating, and parties over four are not automated. Concurrent capacity checks need stronger protection before live use.
 
 **Possible next additions:** Written confirmation by [email or SMS](confirmations.md), an inbound phone number, cancellation, staff alerts, holiday hours, and stronger caller verification.
+
+## Moving accounts
+
+The public Render URL can stay while Make/Vapi accounts change. Import fresh Make blueprints, reconnect the same Google Calendar, update the new Vapi tools with the new webhook URLs, then replace the public key and Assistant ID in each browser. See [Account migration](account-migration.md). No account migration has been performed yet.
