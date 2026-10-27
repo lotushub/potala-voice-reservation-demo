@@ -25,9 +25,9 @@
 | --- | --- |
 | “Is Tuesday at 18:00 available?” | Vapi asks Make to check restaurant rules and the demo calendar. |
 | “Please book it.” | After the guest confirms, Make rechecks and creates a 90-minute event. Vapi reads the returned booking reference. |
-| “I need to change my booking.” | Make matches the booking reference and saved phone, checks the new slot, and updates the same event. |
+| “I need to change my booking.” | Make finds one demo booking using its reference or saved phone, checks the new slot, and updates the same event. |
 
-**Updated 26 October 2026:** New bookings require a confirmed phone number and receive an 8-character reference without hyphens. Make-only tests verified missing-phone rejection and a calendar booking with the fictional phone and reference saved. Phone-only lookup and automatic email/SMS remain unimplemented. New-reference change compatibility still needs checking; see the [checklist](docs/checklist.md).
+**Updated 27 October 2026:** New bookings require a phone and return an 8-character reference without hyphens. Make-only tests verified reference-only and phone-only changes, with the saved description preserved. The latest voice flow still needs an end-to-end check. Automatic email/SMS is not connected.
 
 **Current scope:** one indoor table for 1–4 guests; 15 demo tables; Monday closed; Zurich time. [Exact permitted start times](docs/workflow.md).
 
@@ -51,6 +51,6 @@ To rebuild or switch Vapi organizations, use the [setup guide](docs/setup.md). T
 
 ## Next improvements
 
-Written confirmation, cancellation, an inbound phone number, holiday hours, staff escalation, and stronger verification. Before real restaurant use, prevent simultaneous calls from overbooking the last table and agree on privacy and retention rules. **Automatic email/SMS is not active yet.**
+Written confirmation, handling multiple lookup matches, cancellation, an inbound phone number, holiday hours, staff escalation, and stronger verification. Before real restaurant use, prevent simultaneous calls from overbooking the last table and agree on privacy and retention rules. **Automatic email/SMS is not active yet.**
 
 Do not commit Make webhook URLs, Google Calendar identifiers, private Vapi keys, real guest data, or unredacted scenario exports.
