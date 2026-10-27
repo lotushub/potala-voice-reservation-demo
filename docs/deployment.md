@@ -18,3 +18,16 @@ Render supports free static sites, subject to its monthly included bandwidth and
 The page's setup is stored separately in each browser. A new domain will not inherit values saved on the existing site. Hosting the static page does not include Vapi call credits, Make operations, or SMS costs.
 
 Official references: [ChatGPT Sites hosting](https://help.openai.com/en/articles/20001339-creating-and-using-chatgpt-sites), [Render static sites](https://render.com/docs/static-sites), [Vapi public key restrictions](https://docs.vapi.ai/security-and-privacy/api-keys).
+
+## Live Render deployment (27 October 2026)
+
+Public URL: <https://booking-voice-agent-1wde.onrender.com/>
+
+- Service: `booking-voice-agent`, Static Site, `main` branch.
+- Build from repository root: `cd web && npm ci && npm run build`.
+- Publish directory from repository root: `web/dist`.
+- Existing ChatGPT Sites demo remains available.
+- Deployment reached `live`; landing page and connection settings checked without a paid voice call.
+- To enable calls, allow the exact Render origin in the restricted Vapi public key, then use **Demo einrichten** on the Render page to save that public key and the Assistant ID in the visitor's browser.
+- The new origin has separate browser storage. No Vapi credentials are embedded in the repository or Render deployment. Live voice still requires credits and active Make scenarios.
+
