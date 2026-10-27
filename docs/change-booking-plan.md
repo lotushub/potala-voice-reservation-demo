@@ -1,18 +1,22 @@
-# Change an existing reservation — current demo
+# Change an existing reservation — demo
 
-**Implemented in Make:** the combined Book or Change scenario accepts `action=change`. The Vapi assistant has a separate change tool and prompt. The backend was tested with a fictional booking reference and saved phone: it moved the **same** calendar event to a new slot while preserving the reference and phone.
+Updated 27 October 2026.
 
-**26 October update:** New bookings now receive 8-character references without hyphens. The older exported change route requires length 16; check the live filter for 8/16 compatibility before testing a change. Phone-only lookup is not implemented.
+For demo changes, provide either a booking reference or the phone saved with the booking. A supplied reference takes priority; Make uses phone only when the reference is empty. It does not automatically retry a wrong reference using the phone. Exactly one search result is required; zero or multiple results are rejected without a calendar update. Phone formatting must match the saved value; automatic normalization is not implemented.
 
-## Caller path
+## Implemented
 
-1. The assistant asks for booking reference and phone saved with the original booking, then the new date, start time, and guest count (1–4).
-2. It repeats those details and asks for a clear yes.
-3. The change tool verifies the event by reference and phone, checks time and capacity excluding that original event, then updates it.
-4. Only `success:true` means it changed. `slot_unavailable` leaves the old event; `reservation_not_found_or_unverified` means the details were not matched.
+- Vapi change tool: `newDate`, `newTime`, `newGuests` required; `bookingRef` and `phone` individually optional. Assistant must supply at least one identifier and obtain explicit confirmation before calling.
+- Make entry filter accepts reference length 8 or 16, or a phone-only request with reference empty.
+- Search Events 22 selects reference, otherwise phone. The aggregator/route requires exactly one result.
+- A later filter matches the selected identifier in the event description. The phone label must include its space: `Demo contact number: `.
+- Capacity check excludes the original event; Update 33 preserves `25.Description`, so omitted inputs do not erase stored contact/reference details.
+- Success is reported only after `success:true`. Failed or ambiguous results do not authorize a change.
 
-**Voice verification still outstanding:** a complete spoken change using the real short reference has not been confirmed end to end after the final prompt update. A short English voice call did verify change intent and no-reference handling, with no calendar write.
+## Verified
 
-## Known limits
+Reference-only change and phone-only change both returned success in Make and showed the expected existing calendar event with its saved description preserved. The final phone-only test event was 5 November 2026, 19:00–20:30 for 3 guests. These were direct webhook tests; the latest either-identifier voice flow is not yet verified end to end.
 
-The caller currently gets the booking reference spoken on the successful call only. Automated email/SMS is [planned](confirmations.md). New bookings require a confirmed phone. Legacy bookings without a saved phone cannot be changed automatically. A spoken matching phone does not prove ownership, and simultaneous callers could exceed capacity. Cancellation and staff recovery are not implemented. Keep this in the demo calendar until those issues are addressed.
+## Limits
+
+Demo calendar only. No automatic fallback from an incorrect reference to phone; no normalization of phone formatting, separate booking preview, or selection among multiple matches. Email/SMS and cancellation are not implemented. Before real use, add verified ownership, atomic capacity control, and operational recovery. The old blueprint export predates these changes.
