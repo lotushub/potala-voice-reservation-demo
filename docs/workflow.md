@@ -11,16 +11,18 @@
 
 Phone is required in the Vapi tool and prompt. Make's Free slot filter requires `length(trim(ifempty(1.phone; emptystring))) > 0`; its fallback returns `phone_required` for a missing/blank phone, otherwise `slot_unavailable`. This is a presence check, not phone validation or ownership verification. Availability checks do not require phone.
 
-New references use `substring(uuid; 0; 8)` (8 hexadecimal characters, no hyphens). There is no collision check. Legacy references are unchanged. **Check the live change route before using a new reference:** the saved reference blueprint still requires length 16 and is older than these edits. Accept 8 or 16 characters while retaining the saved-phone and exact-reference checks.
+New references use `substring(uuid; 0; 8)` (8 hexadecimal characters, no hyphens). There is no collision check. The live change entry filter accepts 8- or 16-character references, or a nonempty phone when reference is absent. Older references remain stored unchanged.
 
-## Change existing booking
+## Change existing booking — demo only
 
-1. Caller explicitly asks to change, then supplies the **booking reference** and **same saved phone number**. Without either, this demo cannot automatically change it. Legacy bookings without a phone cannot be changed by this voice flow. New bookings require a phone.
-2. Collect new exact date, time, and guest count. Repeat the request and obtain a clear yes.
-3. Vapi calls `change_potala_demo_indoor_reservation(bookingRef, phone, newDate, newTime, newGuests)`. Do not call the separate availability tool: Make searches the proposed slot while excluding this original event.
-4. Make verifies matching reference and phone, checks hours/capacity, and updates the existing Google Calendar event. The response is `{"success":true}` or a reason such as `slot_unavailable` or `reservation_not_found_or_unverified`. The assistant claims success only after true. Cancellation is not implemented.
+1. Caller supplies a booking reference **or** the saved phone, plus the proposed new date, time, and guest count. Repeat the supplied identifier and proposed change and obtain a clear yes.
+2. Vapi calls `change_potala_demo_indoor_reservation` with `newDate`, `newTime`, and `newGuests` required; `bookingRef` and `phone` are individually optional, but at least one must be provided.
+3. Calendar Search Events 22 uses `ifempty(1.bookingRef; 1.phone)`. For demo changes, provide either a booking reference or the phone saved with the booking. A supplied reference takes priority; Make uses phone only when the reference is empty. It does not automatically retry a wrong reference using the phone. Exactly one search result is required; zero or multiple results are rejected without a calendar update. Phone formatting must match the saved value; automatic normalization is not implemented.
+4. The match filter has a reference-only group (description contains the supplied reference and reference is nonempty), OR a phone-only group (reference empty, phone nonempty, description contains `Demo contact number: ` plus supplied phone). Preserve the space after the colon.
+5. Make checks capacity excluding the existing event, validates the new slot, and updates the **same** Event ID. Update module 33 maps Description from `25.Description`, preserving the stored phone and reference.
+6. Report success only after `success:true`. Handle `slot_unavailable` and `reservation_not_found_or_unverified` without claiming success. The tool does not provide a separate preview/selection step or list multiple matching bookings. Cancellation is not implemented.
 
-A reference plus a spoken number is a matching check, **not proof of phone ownership**. Add stronger verification before serving actual customers.
+Reference-only and phone-only changes were both verified directly in Make on 26 October, including the saved calendar result. The latest voice flow remains unverified end to end. Either identifier is sufficient only for this **demo**; this is not proof of identity or phone ownership. Stronger verification is required before real restaurant use.
 
 ## Accepted starts (Europe/Zurich)
 
