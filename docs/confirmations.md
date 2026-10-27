@@ -2,7 +2,7 @@
 
 ## What works today
 
-New bookings require a confirmed phone number. When the combined Make booking scenario succeeds, it returns an 8-character, hyphen-free `bookingRef` and stores that reference in the demo event. The assistant is instructed to spell it and ask the caller to keep it. The change flow requires that exact reference **and the same saved phone number**. There is currently **no SMS or email delivery**. A caller who forgets the reference needs staff help; the assistant should not claim it can look up a booking by name alone.
+New bookings require a confirmed phone number. When the combined Make booking scenario succeeds, it returns an 8-character, hyphen-free `bookingRef` and stores that reference in the demo event. The assistant is instructed to spell it and ask the caller to keep it. The demo change flow accepts either the reference **or the saved phone**, provided the lookup returns exactly one booking. A supplied reference takes priority. There is currently **no SMS or email delivery**. A caller who forgets the reference can supply the saved phone. Multiple matches are rejected; the tool does not list bookings or search by name alone. This relaxed lookup is for demo use, not ownership verification.
 
 Example after `{"success":true,"bookingRef":"..."}`:
 
@@ -23,6 +23,6 @@ Make's Gmail app provides a Send an Email module: <https://help.make.com/new-gma
 
 ## SMS alternative
 
-If phone number is collected and the caller consents, a Make Twilio messaging action after successful booking/change can send the reference and details to that number. Twilio requires an account and a supported sender; trial accounts can send only to verified numbers: <https://apps.make.com/twilio>. Check Swiss and recipient-country messaging rules, delivery cost, and whether the phone can receive SMS before promising delivery: <https://www.twilio.com/docs/messaging/guides/sending-international-sms-guide>. An incoming web voice call does **not** automatically prove the optional spoken phone is the caller's number.
+If phone number is collected and the caller consents, a Make Twilio messaging action after successful booking/change can send the reference and details to that number. Twilio requires an account and a supported sender; trial accounts can send only to verified numbers: <https://apps.make.com/twilio>. Check Swiss and recipient-country messaging rules, delivery cost, and whether the phone can receive SMS before promising delivery: <https://www.twilio.com/docs/messaging/guides/sending-international-sms-guide>. An incoming web voice call does **not** automatically prove the spoken phone is the caller's number.
 
 For production, sending a confirmation to an unverified spoken address/number can disclose booking data to someone else. Decide verification, consent, retention, and failure behavior first. Never commit recipient details or mail/SMS credentials to this repo.
