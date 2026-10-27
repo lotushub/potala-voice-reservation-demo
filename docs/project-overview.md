@@ -12,9 +12,13 @@
 
 ## Change a booking
 
-1. Vapi asks for the booking reference, the phone saved with it, and the new date, time, and guest count.
+1. Vapi asks for either the booking reference or saved phone, plus the new date, time, and guest count.
 2. After confirmation, Vapi calls the **change tool**.
-3. Make matches the existing event, checks the new slot, and updates that same event. Vapi reports success only if Make returns `success:true`.
+3. Make requires exactly one matching event, checks the new slot, and updates that same event while preserving its reference and phone. Vapi reports success only if Make returns `success:true`.
+
+For demo changes, provide either a booking reference or the phone saved with the booking. A supplied reference takes priority; Make uses phone only when the reference is empty. It does not automatically retry a wrong reference using the phone. Exactly one search result is required; zero or multiple results are rejected without a calendar update. Phone formatting must match the saved value; automatic normalization is not implemented.
+
+Both lookup paths are tested in Make. The latest voice flow still needs an end-to-end check.
 
 ## How Make is organized
 
