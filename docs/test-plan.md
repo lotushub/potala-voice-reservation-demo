@@ -1,6 +1,6 @@
 # Test record and low-credit checks
 
-Updated 26 October 2026.
+Updated 27 October 2026.
 
 ## Verified through the session
 
@@ -13,11 +13,13 @@ Updated 26 October 2026.
 | Vapi direct tool tests | Book and change rejected invalid slots with JSON `success:false` |
 | Required phone (26 October) | Make-only request without phone returned `phone_required` |
 | New reference (26 October) | Make-only booking on 4 November 2026, 18:00–19:30 for 2 guests saved a fictional phone and an 8-character reference without hyphens |
+| Reference-only demo change (26 October) | Request omitted phone; existing event moved to 5 November, 18:00–19:30, 2 guests; phone and reference preserved |
+| Phone-only demo change (26 October) | Request omitted reference; unique fictional saved phone found the event; moved to 5 November, 19:00–20:30, 3 guests; description preserved |
 | Short voice call | German first message, English switch, recognized change intent with no reference, no accidental booking/tool call |
 
-**Compatibility check first:** the older saved blueprint requires reference length 16 on the change route. Inspect the live filter and support both 8-character and legacy 16-character references. New-reference changes have not been tested.
+**Compatibility:** live entry filter now supports 8- and 16-character references and phone-only requests. Both new lookup paths passed Make-only tests. The repository blueprint is still an older export.
 
-**Remaining:** one complete voice change with a spoken reference and phone after the latest assistant prompt. Separate backend tests do not prove the full voice path. Notifications have not been configured or tested. Avoid extra paid calls while credit is low.
+**Remaining:** one complete voice change with either a spoken reference or a unique saved phone after the latest assistant prompt. Separate backend tests do not prove the full voice path. Notifications have not been configured or tested. Avoid extra paid calls while credit is low.
 
 ## One final end-to-end check when ready
 
