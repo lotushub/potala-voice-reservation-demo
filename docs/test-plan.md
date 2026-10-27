@@ -15,6 +15,8 @@ Updated 27 October 2026.
 | New reference (26 October) | Make-only booking on 4 November 2026, 18:00–19:30 for 2 guests saved a fictional phone and an 8-character reference without hyphens |
 | Reference-only demo change (26 October) | Request omitted phone; existing event moved to 5 November, 18:00–19:30, 2 guests; phone and reference preserved |
 | Phone-only demo change (26 October) | Request omitted reference; unique fictional saved phone found the event; moved to 5 November, 19:00–20:30, 3 guests; description preserved |
+| Uppercase reference (27 October) | Direct Make request with uppercase bookingRef returned success true; the user verified the same event moved to 1 December 2026, 19:00–20:30, 3 guests, retaining saved phone/reference |
+| Render deployment (27 October) | Static Site reached live; landing page, waveform and connection settings checked without starting a Vapi call |
 | Short voice call | German first message, English switch, recognized change intent with no reference, no accidental booking/tool call |
 
 **Compatibility:** live entry filter now supports 8- and 16-character references and phone-only requests. Both new lookup paths passed Make-only tests. The repository blueprint is still an older export.
@@ -24,3 +26,9 @@ Updated 27 October 2026.
 ## One final end-to-end check when ready
 
 Use one existing fictional demo event with a recorded reference and saved phone. Choose a fresh future open slot and request a change by voice through the web page. Confirm the assistant uses only the change tool, says success only after tool success, and that exactly the original calendar event moved with the same reference and phone. Inspect Vapi call log and Make history if the outcome differs; avoid repeating the call blindly. Do not treat a demonstration as a real restaurant booking.
+
+## Checks that do not use Vapi credits
+
+Inspect existing Vapi transcripts and Make history without new calls. Direct Make webhook requests avoid Vapi charges but still consume Make credits and may update demo events. The browser-local microphone test starts no call. **Sprachdemo starten** starts a paid call when the browser is configured; opening **Demo einrichten** does not.
+
+The latest full voice change and waveform speech response have not been re-tested after the latest changes. Do not equate the successful direct Make test or public page load with an end-to-end voice pass.
