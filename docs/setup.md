@@ -9,9 +9,9 @@
 
 ### Current changes (27 October)
 
-New bookings require phone; a missing phone returns `phone_required`, and new references use `substring(uuid; 0; 8)`. Demo changes accept either reference or saved phone and were verified in Make-only tests. Search 22 uses `ifempty(1.bookingRef; 1.phone)`; Update 33 preserves `25.Description`.
+New bookings require phone; a missing phone returns `phone_required`, and new references use `substring(uuid; 0; 8)`. Demo changes accept either reference or saved phone and were verified in Make-only tests. Search 22 uses `lower(trim(ifempty(1.bookingRef; 1.phone)))`; Update 33 preserves `25.Description`. The description comparison for the reference uses **Contains (case insensitive)**. Its OR phone group checks phone length > 4 and description contains the saved-phone label plus supplied phone, without requiring reference to be empty. The initial query still gives reference priority; this is not automatic phone fallback.
 
-The entry filter permits action=change AND reference length=16, OR action=change AND reference length=8, OR action=change AND reference empty AND phone length>4. The later match filter accepts the chosen identifier, and exactly one search result is required.
+The entry filter permits action=change AND reference length=16, OR action=change AND reference length=8, OR action=change AND reference empty AND phone length>4. The later match filter accepts reference OR phone, and exactly one initial search result is required.
 
 These edits are **not included in the older blueprint export**. Re-export and sanitize the live scenario before treating this repository as a restoration backup. Do not overwrite the working scenario with the older export.
 
@@ -33,7 +33,7 @@ Reference lookup has priority if both identifiers are supplied; phone-only queri
 
 Keep complete webhook addresses and account tokens out of GitHub. A change should use the **change tool only** after explicit confirmation.
 
-## 3. Move to a Vapi account with separate credits
+## 3. Move to a different Vapi account
 
 1. In the new login, check which **organization** is selected and its balance. A second login to the same organization does not move the assistant to a separately funded organization or create a new credit pool.
 2. If using a different organization, create/publish a Potala assistant there with the same first message, prompt, transcriber, model, and voice available to that account. Recreate the **three tools** above with the existing Make endpoints and exact fields; attach all three. Keep the old account for comparison. Do not assume the old assistant or tool IDs transfer.
@@ -42,9 +42,11 @@ Keep complete webhook addresses and account tokens out of GitHub. A change shoul
 
 Changing the Vapi organization does not require changing the existing Make scenario or demo Google Calendar when their connections and webhooks are retained.
 
+For moving **both Make and Vapi**, use [account-migration.md](account-migration.md). New account registration does not guarantee another introductory credit allowance.
+
 ## 4. Public page
 
-<https://potala-voice-demo-2026.ochrescout3.chatgpt.site> accepts a public key and assistant ID per browser, saved locally there. The source is `web/`. The deployed page now uses Potala-inspired blue, red, cream, and orange styling. Starting a call consumes Vapi credit. [Hosting alternatives](deployment.md). Browser access is not guest authentication. Restrict the public key to the exact origin and assistant; monitor usage.
+<https://booking-voice-agent-1wde.onrender.com/> accepts a public key and assistant ID per browser, saved locally there. The source is `web/`. The deployed page now uses Potala-inspired blue, red, cream, and orange styling. The simplified page opens an orange waveform voice dialog. **Demo einrichten** exposes settings; **Sprachdemo starten** immediately starts a call in an already configured browser. Opening connection settings and using the local microphone check do not start a Vapi call. Live calls consume Vapi credit and tool runs consume Make credits. [Hosting alternatives](deployment.md). Browser access is not guest authentication. Restrict the public key to the exact origin and assistant; monitor usage.
 
 ## Before real restaurant use
 
